@@ -1,0 +1,84 @@
+import math
+import numpy as np
+class bullet():
+    def __init__(self,vel, pos, rad):
+        self.rad = rad
+        self.vel=vel
+        self.pos = pos
+    def update(self, boundary):
+        #boundary is 2d array of x, y coordinates
+        self.pos = [self.pos[i] + self.vel[i] for i in range(2)]
+        if self.pos[0] <-self.rad or self.pos[0]> boundary[0]+self.rad or  self.pos[1] < -self.rad or self.pos[1] > boundary[1]+self.rad:
+            return False
+        return True
+
+
+class ship():
+    def __init__(self, maxvel, initpos, rad, sights = 16):
+        self.maxvel = maxvel
+        self.pos = initpos
+        self.sights = sights
+        self.rad = rad
+    def move(self,vel):
+        inputvel = math.sqrt(sum([i**2 for i in vel]))
+        if inputvel>maxvel:
+            vel = [i*maxvel/inputvel for i in vel]
+        self.pos = [self.pos[i] + self.vel[i] for i in range(2)]
+
+class environ():
+    def __init__(self, boundary=[200,300], bulletcap=100, shipinit=[100, 200], cd=5, spawn =[100, 20] ):
+        self.fighter = ship(3,shipinit, 2)
+        self.bullets = []
+        self.cd = cd
+        self.timer= cd
+        self.boundary=boundary
+        self.bulletcap=bulletcap
+        self.spawn = spawn
+
+    def col(self,p1, p2, r1, r2):
+        disvec =[p1[i] - p2[i] for i in range(2)]
+        return sum([i**2 for i in disvec])<(r1+r2)**2
+    def reset(self):
+        self.bullets = []
+                 
+    def update(self):
+        self.timer-=1
+        if self.timer==0:
+            self.timer=self.cd
+            if len(self.bullets)<self.bulletcap:
+                spd=np.random.uniform(3.0,5.0)
+                angle = np.random.uniform(0,6.283)
+                v = [spd*np.sin(angle), spd*np.cos(angle)]
+                self.bullets.append(bullet(v, self.spawn,5))
+        newbullets = []
+        for i in range(len(self.bullets)):
+            if self.bullets[i].update(self.boundary):
+                newbullets.append(self.bullets[i])
+        self.bullets = newbullets
+        ##move ship here
+        for bul in self.bullets:
+            if self.col(self.fighter.pos, bul.pos, bul.rad, self.fighter.rad):
+                return True
+        return False
+
+                 
+    def ep(self, maxtime):
+        for i in range(maxtime):
+            if self.update():
+                 return i
+        return maxtime
+                 
+if __name__="__main__":
+
+env=environ()
+print("start")
+for i in range(1000):
+
+    env.ep(1000)
+    env.reset()
+    
+print("end") 
+
+
+
+        
