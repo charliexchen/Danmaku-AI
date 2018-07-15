@@ -18,13 +18,17 @@ def tanh(x, scale=1.0):
 
 class dense_layer():
     def __init__(self, input_size, output_size, activation, initvar=0.2):
+        self.initvar = initvar
         self.weights = np.random.normal(0, initvar, [output_size, input_size + 1])
         self.input_size = input_size
         self.output_size = output_size
         self.activation = activation
 
     def evaluate(self, input):
-        assert (len(input) == self.input_size)
+        try:
+            assert (len(input) == self.input_size)
+        except AssertionError:
+            print("Input size incorrect: expected {} but obtained {}".format(self.input_size, len(input)))
         return np.array([self.activation(row[0] + sum(input * row[1:])) for row in self.weights])
 
     def mutate(self, rate):
@@ -35,18 +39,34 @@ class dense_layer():
 
 
 class dense_net():
-    def __init__(self, input_size, output_size, first_activation, initvar=0.2):
+    def __init__(self, input_size, output_size, first_activation, initvar=0.2, recursive=False):
         self.input_size = input_size
         self.layers = [dense_layer(input_size, output_size, first_activation, initvar)]
+        self.recursive = recursive
+        if self.recursive:
+            self.previous = [0 for i in range(output_size)]
 
     def add_layer(self, output_size, activation, initvar=0.2):
         self.layers.append(dense_layer(self.layers[-1].output_size, output_size, activation, initvar))
+        if self.recursive:
+            self.layers[0] = dense_layer(self.layers[-1].output_size + self.input_size, self.layers[0].output_size,
+                                         self.layers[0].activation, self.layers[0].initvar)
+            self.previous = [0 for i in range(output_size)]
 
     def evaluate(self, input):
-        assert (len(input) == self.input_size)
+        if self.recursive:
+            input = list(input) + list(self.previous)
+        try:
+            if self.recursive:
+                assert (len(input) == self.input_size+self.layers[-1].output_size)
+            else:
+                assert (len(input) == self.input_size)
+        except AssertionError:
+            print("Input size incorrect: expected {} but obtained {}".format(self.input_size, len(input)))
         output = input
         for layer in self.layers:
             output = layer.evaluate(output)
+        self.previous = output
         return output
 
     def mutate(self, rate):
@@ -54,7 +74,7 @@ class dense_net():
             for layer in self.layers:
                 layer.mutate(rate)
         else:
-            assert (len(layers) == len(rate))
+            assert (len(self.layers) == len(rate))
             for i in range(len(self.layers)):
                 layer.mutate(rate[i])
 
