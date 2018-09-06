@@ -1,4 +1,4 @@
-from Environ.neural_net import relu, sigmoid, tanh
+from neural_net import relu, sigmoid, tanh
 import numpy as np
 import pdb
 import cProfile

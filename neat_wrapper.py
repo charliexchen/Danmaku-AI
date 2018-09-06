@@ -1,8 +1,6 @@
 """
 2-input XOR example -- this is most likely the simplest possible example.
 """
-
-from __future__ import print_function
 import neat
 
 # 2-input XOR inputs and expected outputs.

@@ -1,9 +1,9 @@
 import numpy as np
 import copy
-from Environ.objects import environ
-from Environ.display import gui
-from Environ.neural_net import dense_net, relu, sigmoid, tanh
-from Environ.Neat import Neat
+from objects import environ
+from display import gui
+from neural_net import dense_net, relu, sigmoid, tanh
+from Neat import Neat
 import pickle
 from multiprocessing import Pool, TimeoutError, cpu_count
 import os

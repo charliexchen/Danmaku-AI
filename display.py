@@ -1,7 +1,7 @@
 import pygame
 import pickle
-from Environ.objects import environ
-from Environ.neural_net import dense_net, relu, sigmoid, tanh
+from objects import environ
+from neural_net import dense_net, relu, sigmoid, tanh
 import pdb, cProfile
 
 # Colors
