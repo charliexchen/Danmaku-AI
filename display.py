@@ -2,6 +2,7 @@ import pygame
 import pickle
 from Environ.objects import environ
 from Environ.neural_net import dense_net, relu, sigmoid, tanh
+import pdb, cProfile
 
 # Colors
 BLACK = (0, 0, 0)
@@ -38,7 +39,7 @@ class gui:
 
         self.display_net((sensorpos, fittest.controller), loops)
 
-    def display_net(self, hyperparams, loops=-1, cd=10000, rand_cd=1, rand_bul=True):
+    def display_net(self, hyperparams, loops=-1, bullet_types={"aimed": 15, "spiral": 1, "random": 1}):
 
         pygame.init()
         # Create an 800x600 sized screen
@@ -50,7 +51,7 @@ class gui:
 
         clock = pygame.time.Clock()
         done = False
-        env = environ(hyperparams, self.boundary, 100, [100, 100], cd, rand_cd, [100, 10], rand_bul)
+        env = environ(hyperparams, self.boundary, 100, [100, 100], [100, 10], bullet_types)
         while not done:
             if loops == env.deaths:
                 done = True
@@ -87,20 +88,26 @@ class gui:
                         pygame.draw.circle(screen, RED, dispos(incoming), 10, 1)
                 # pygame.draw.circle(screen,, dispos(env.fighter.pos), env.fighter.rad)
             pygame.display.flip()
-            clock.tick(15)
+            clock.tick(30)
         pygame.quit()
 
 
-sensorpos = [
-    (0, -10, 1), (10, -10, 1), (-10, -10, 1), (-10, 0, 1), (10, 0, 1),
-    (0, -20, 1), (20, -20, 1), (-20, -20, 1), (-20, 0, 1), (20, 0, 1),
-    (0, -30, 1), (30, -30, 1), (-30, -30, 1), (-30, 0, 1), (30, 0, 1),
-    (0, -50, 1), (10, -20, 1), (-10, -20, 1), (-50, 0, 1), (50, 0, 1),
-    (0, 15, 1), (10, -30, 1), (-10, -30, 1)]
+if __name__ == "__main__":
+    sensorpos = [
+        (0, -10, 1), (10, -10, 1), (-10, -10, 1), (-10, 0, 1), (10, 0, 1),
+        (0, -20, 1), (20, -20, 1), (-20, -20, 1), (-20, 0, 1), (20, 0, 1),
+        (0, -30, 1), (30, -30, 1), (-30, -30, 1), (-30, 0, 1), (30, 0, 1),
+        (0, -50, 1), (10, -20, 1), (-10, -20, 1), (-50, 0, 1), (50, 0, 1),
+        (0, 15, 1), (10, -30, 1), (-10, -30, 1)]
+    # pdb.set_trace()
 
-net = dense_net(16, 10, relu, recursive=True)
-net.add_layer(2, tanh)
-env = environ((8, net), cd=10000)
-GUI = gui()
-hyperparams = (8, net)
-GUI.display_net(hyperparams)
+    net = dense_net(16, 10, relu, recursive=True)
+    net.add_layer(10, tanh)
+    env = environ((8, net))
+    print("Profiling fitness evaluation times")
+    cProfile.run('env.eval_fitness(500)')
+
+    GUI = gui()
+    hyperparams = (8, net)
+    GUI.display_imported_generation("generation10.p")
+    # GUI.display_net(hyperparams, bullet_types={"spiral":1})

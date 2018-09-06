@@ -39,9 +39,9 @@ class dense_layer():
 
 
 class dense_net():
-    def __init__(self, input_size, output_size, first_activation, initvar=0.2, recursive=False):
+    def __init__(self, input_size, output_size, output_rule, initvar=0.2, recursive=False):
         self.input_size = input_size
-        self.layers = [dense_layer(input_size, output_size, first_activation, initvar)]
+        self.layers = [dense_layer(input_size, output_size, output_rule, initvar)]
         self.recursive = recursive
         if self.recursive:
             self.previous = [0 for i in range(output_size)]
@@ -77,6 +77,12 @@ class dense_net():
             assert (len(self.layers) == len(rate))
             for i in range(len(self.layers)):
                 layer.mutate(rate[i])
+    def reset_rec(self, ):
+        try:
+            assert(self.recursive==True)
+        except AssertionError:
+            print("Error -- tried to reset recursion inputs to non-recursive net")
+        self.previous = [0 for i in self.previous]
 
     def reset(self, rate):
         if type(rate) == float:
@@ -95,3 +101,15 @@ if __name__ == "__main__":
     print(net.evaluate(np.array([1, 1, 1])))
     net.mutate(0.05)
     print(net.evaluate(np.array([1, 1, 1])))
+
+
+    def timetest():
+        net = dense_net(3, 10, tanh)
+        net.add_layer(2, tanh)
+        for i in range(1000):
+            net.evaluate(np.array([1, 1, 1]))
+
+    import cProfile
+
+    cProfile.run("timetest()")
+
