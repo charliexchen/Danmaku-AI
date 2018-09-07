@@ -1,7 +1,6 @@
 import numpy as np
 import copy
 from objects import environ
-#from display import gui
 from neural_net import dense_net, relu, sigmoid, tanh
 from Neat import Neat
 import pickle
@@ -9,6 +8,7 @@ from multiprocessing import Pool, TimeoutError, cpu_count
 import os
 import time
 import math
+
 
 def f(env):
     return env.eval_fitness(1000)
@@ -42,14 +42,13 @@ class population():
         for i in range(pop_size):
 
 
-            self.agents.append(environ((sensorpos, Neat(25, 2, tanh)), bullet_types={"aimed": 15, "spiral": 1, "random": 1}))
-
-
-            '''    
+            self.agents.append(environ((sensorpos, dense_net(29,14,relu)), bullet_types={"aimed": 15, "spiral": 1, "random": 1}))
+            #Neat(25, 2, tanh)
             self.agents[-1].controller.add_layer(14, relu)
-            self.agents[-1].controller.add_layer(8, sigmoid)
+            self.agents[-1].controller.add_layer(10, relu)
+            self.agents[-1].controller.add_layer(10, relu)
             self.agents[-1].controller.add_layer(2, tanh)
-            '''
+
         self.pop_size = pop_size
         self.gen=1
         self.training_timer = Timer()
@@ -119,9 +118,9 @@ if __name__=="__main__":
         (0, -20, 1), (20, -20, 1), (-20, -20, 1), (-20, 0, 1), (20, 0, 1),
         (0, -30, 1), (30, -30, 1), (-30, -30, 1), (-30, 0, 1), (30, 0, 1),
         (0, -40, 1), (10, -20, 1), (-10, -20, 1), (-40, 0, 1), (40, 0, 1),
-        (0, 15, 1), (10, -30, 1), (-10, -30, 1)]
+        (0, 15, 1), (10, -30, 1), (-10, -30, 1),(30, -10, 1), (-30, -10, 1),(20, -10, 1), (-20, -10, 1)]
 
-    pop = population(sensor_pos, 100)
+    pop = population(sensor_pos, 250)
 
 
     starting_gen=input("Start from which existing generation? (return empty if no such generation exists):")
@@ -141,22 +140,28 @@ if __name__=="__main__":
 
     rate = [0.25, 0.2]
 
-    #GUI = gui()
+    display = input("Display best in generation? (return empty if no)")
+    display = display !=""
+    if display:
+        from display import gui
+        GUI = gui()
+
+
     for i in range(starting_gen+1,1000):
         print("Evaluating fitness...")
         pop.find_fitness(1000)
         print("Selecting fittest")
         pop.select()
         print("Surviving agents: {}".format(len(pop.agents)))
-        pop.breed([rate[0] / (i + 1), rate[1] / (i + 1)])
+        pop.breed([rate[0]/(1+i), rate[1]/(1+i)])
         print("saving gen {}".format(i))
 
         file_name = os.path.join(save_path, "generation{}.p".format(i))
 
         pickle.dump(pop.agents, open(file_name, "wb"))
         print("saved gen {}".format(i))
-        #if i%5==0:
-        #    GUI.display_imported_generation(file_name, 3)
+        if i%5==0 and display:
+            GUI.display_imported_generation(file_name, 3)
         # if i % 25 == 0 and i != 0:
         #    rate = [i / 2 for i in rate]
         #    print("Decaying learning rate to: {}".format(rate))
