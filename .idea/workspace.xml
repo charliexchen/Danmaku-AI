@@ -2,6 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3021a6a4-fe49-4457-bc0f-074b26c11d2a" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/generation169.p" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/display.py" afterPath="$PROJECT_DIR$/display.py" />
+      <change beforePath="$PROJECT_DIR$/neural_net.py" afterPath="$PROJECT_DIR$/neural_net.py" />
       <change beforePath="$PROJECT_DIR$/training.py" afterPath="$PROJECT_DIR$/training.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -26,8 +30,8 @@
       <file leaf-file-name="training.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/training.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="486">
-              <caret line="120" column="75" lean-forward="false" selection-start-line="120" selection-start-column="48" selection-end-line="120" selection-end-column="75" />
+            <state relative-caret-position="283">
+              <caret line="44" column="99" lean-forward="false" selection-start-line="44" selection-start-column="99" selection-end-line="44" selection-end-column="99" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -39,8 +43,10 @@
         <entry file="file://$PROJECT_DIR$/neural_net.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="264">
-              <caret line="41" column="59" lean-forward="false" selection-start-line="41" selection-start-column="23" selection-end-line="41" selection-end-column="59" />
-              <folding />
+              <caret line="68" column="26" lean-forward="true" selection-start-line="68" selection-start-column="26" selection-end-line="68" selection-end-column="26" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -58,8 +64,8 @@
       <file leaf-file-name="display.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/display.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
-              <caret line="12" column="20" lean-forward="false" selection-start-line="12" selection-start-column="20" selection-end-line="12" selection-end-column="20" />
+            <state relative-caret-position="1608">
+              <caret line="64" column="72" lean-forward="false" selection-start-line="64" selection-start-column="72" selection-end-line="64" selection-end-column="72" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -70,7 +76,7 @@
       <file leaf-file-name="Neat.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Neat.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
+            <state relative-caret-position="330">
               <caret line="10" column="16" lean-forward="false" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
               <folding>
                 <element signature="e#0#42#0" expanded="true" />
@@ -114,9 +120,10 @@
         <option value="$PROJECT_DIR$/Environ/training.py" />
         <option value="$PROJECT_DIR$/Environ/neat_wrapper.py" />
         <option value="$PROJECT_DIR$/Environ/display.py" />
-        <option value="$PROJECT_DIR$/display.py" />
         <option value="$PROJECT_DIR$/Neat.py" />
         <option value="$PROJECT_DIR$/neat_wrapper.py" />
+        <option value="$PROJECT_DIR$/display.py" />
+        <option value="$PROJECT_DIR$/neural_net.py" />
         <option value="$PROJECT_DIR$/training.py" />
       </list>
     </option>
@@ -187,12 +194,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Environ" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="DanmakuBot" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Environ/display.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/display.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -324,7 +331,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27657077" sideWeight="0.5061813" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33881387" sideWeight="0.49725273" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27657077" sideWeight="0.49381867" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39577216" sideWeight="0.49381867" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -444,16 +451,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Neat.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="10" column="16" lean-forward="false" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/neat_wrapper.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="990">
@@ -462,10 +459,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Neat.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="10" column="16" lean-forward="false" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/display.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="12" column="20" lean-forward="false" selection-start-line="12" selection-start-column="20" selection-end-line="12" selection-end-column="20" />
+        <state relative-caret-position="1608">
+          <caret line="64" column="72" lean-forward="false" selection-start-line="64" selection-start-column="72" selection-end-line="64" selection-end-column="72" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
@@ -475,15 +482,17 @@
     <entry file="file://$PROJECT_DIR$/neural_net.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="264">
-          <caret line="41" column="59" lean-forward="false" selection-start-line="41" selection-start-column="23" selection-end-line="41" selection-end-column="59" />
-          <folding />
+          <caret line="68" column="26" lean-forward="true" selection-start-line="68" selection-start-column="26" selection-end-line="68" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/training.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
-          <caret line="120" column="75" lean-forward="false" selection-start-line="120" selection-start-column="48" selection-end-line="120" selection-end-column="75" />
+        <state relative-caret-position="283">
+          <caret line="44" column="99" lean-forward="false" selection-start-line="44" selection-start-column="99" selection-end-line="44" selection-end-column="99" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>

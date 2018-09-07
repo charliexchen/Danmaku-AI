@@ -1,5 +1,5 @@
 import numpy as np
-
+import pdb
 
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
@@ -39,35 +39,61 @@ class dense_layer():
 
 
 class dense_net():
-    def __init__(self, input_size, output_size, output_rule, initvar=0.2, recursive=False):
+    def __init__(self, input_size, output_size, output_rule, initvar=0.2, recursive=False,  rec_size = 4):
         self.input_size = input_size
         self.layers = [dense_layer(input_size, output_size, output_rule, initvar)]
         self.recursive = recursive
         if self.recursive:
-            self.previous = [0 for i in range(output_size)]
+            self.rec_size = rec_size
+            self.previous = [0 for i in range(rec_size)]
+            self.finalised = False
 
-    def add_layer(self, output_size, activation, initvar=0.2):
-        self.layers.append(dense_layer(self.layers[-1].output_size, output_size, activation, initvar))
+    def add_layer(self, output_size, activation, initvar=0.2, final=False):
         if self.recursive:
-            self.layers[0] = dense_layer(self.layers[-1].output_size + self.input_size, self.layers[0].output_size,
-                                         self.layers[0].activation, self.layers[0].initvar)
-            self.previous = [0 for i in range(output_size)]
+            if final:
+                try:
+                    assert not self.finalised
+                except AssertionError:
+                    print("Error -- Rec Net already finalised")
+                self.layers.append(dense_layer(self.layers[-1].output_size, output_size+self.rec_size, activation, initvar))
+                self.layers[0] = dense_layer(self.rec_size + self.input_size, self.layers[0].output_size,
+                                             self.layers[0].activation, self.layers[0].initvar)
+                self.previous = [0 for i in range(self.rec_size)]
+                self.finalised = True
+            else:
+                 self.layers.append(dense_layer(self.layers[-1].output_size, output_size, activation, initvar))
+        else:
+            self.layers.append(dense_layer(self.layers[-1].output_size, output_size, activation, initvar))
 
     def evaluate(self, input):
         if self.recursive:
+            try:
+                assert self.finalised
+            except AssertionError:
+                print("Error -- Evaluating Rec net before finalisation")
             input = list(input) + list(self.previous)
+
         try:
             if self.recursive:
-                assert (len(input) == self.input_size+self.layers[-1].output_size)
+                assert (len(input) == self.input_size+self.rec_size)
             else:
                 assert (len(input) == self.input_size)
         except AssertionError:
             print("Input size incorrect: expected {} but obtained {}".format(self.input_size, len(input)))
+
+
         output = input
         for layer in self.layers:
             output = layer.evaluate(output)
-        self.previous = output
-        return output
+
+
+
+        if self.recursive:
+            output_length = self.layers[-1].output_size - self.rec_size
+            self.previous = output[output_length:]
+            return output[:output_length]
+        else:
+            return output
 
     def mutate(self, rate):
         if type(rate) == float:
@@ -92,6 +118,7 @@ class dense_net():
             assert (len(layers) == len(rate))
             for i in range(len(self.layers)):
                 layer.reset(rate[i])
+
 
 
 if __name__ == "__main__":
