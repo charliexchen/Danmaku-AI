@@ -42,7 +42,7 @@ class population():
         for i in range(pop_size):
 
 
-            self.agents.append(environ((sensorpos, dense_net(25,14,relu)), bullet_types={"aimed": 15, "spiral": 1, "random": 1}))
+            self.agents.append(environ((sensorpos, dense_net(27,14,relu)), bullet_types={"aimed": 15, "spiral": 1, "random": 1}))
             #Neat(25, 2, tanh)
             self.agents[-1].controller.add_layer(14, relu)
             self.agents[-1].controller.add_layer(10, relu)
@@ -118,7 +118,7 @@ if __name__=="__main__":
         (0, -20, 1), (20, -20, 1), (-20, -20, 1), (-20, 0, 1), (20, 0, 1),
         (0, -30, 1), (30, -30, 1), (-30, -30, 1), (-30, 0, 1), (30, 0, 1),
         (0, -40, 1), (10, -20, 1), (-10, -20, 1), (-40, 0, 1), (40, 0, 1),
-        (0, 15, 1), (10, -30, 1), (-10, -30, 1)]
+        (0, 15, 1), (10, -30, 1), (-10, -30, 1),(30, -10, 1), (-30, -10, 1)]
 
     pop = population(sensor_pos, 100)
 
