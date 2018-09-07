@@ -1,7 +1,6 @@
 import numpy as np
 import copy
 from objects import environ
-from display import gui
 from neural_net import dense_net, relu, sigmoid, tanh
 from Neat import Neat
 import pickle
@@ -9,6 +8,7 @@ from multiprocessing import Pool, TimeoutError, cpu_count
 import os
 import time
 import math
+
 
 def f(env):
     return env.eval_fitness(1000)
@@ -42,14 +42,13 @@ class population():
         for i in range(pop_size):
 
 
-            self.agents.append(environ((sensorpos, Neat(25, 2, tanh)), bullet_types={"aimed": 15, "spiral": 1, "random": 1}))
-
-
-            '''    
+            self.agents.append(environ((sensorpos, dense_net(25,14,relu)), bullet_types={"aimed": 15, "spiral": 1, "random": 1}))
+            #Neat(25, 2, tanh)
             self.agents[-1].controller.add_layer(14, relu)
-            self.agents[-1].controller.add_layer(8, sigmoid)
+            self.agents[-1].controller.add_layer(10, relu)
+            self.agents[-1].controller.add_layer(10, relu)
             self.agents[-1].controller.add_layer(2, tanh)
-            '''
+
         self.pop_size = pop_size
         self.gen=1
         self.training_timer = Timer()
@@ -141,7 +140,13 @@ if __name__=="__main__":
 
     rate = [0.25, 0.2]
 
-    GUI = gui()
+    display = input("Display best in generation? (return empty if no)")
+    display = display !=""
+    if display:
+        from display import gui
+        GUI = gui()
+
+
     for i in range(starting_gen+1,1000):
         print("Evaluating fitness...")
         pop.find_fitness(1000)
@@ -155,7 +160,7 @@ if __name__=="__main__":
 
         pickle.dump(pop.agents, open(file_name, "wb"))
         print("saved gen {}".format(i))
-        if i%5==0:
+        if i%5==0 and display:
             GUI.display_imported_generation(file_name, 3)
         # if i % 25 == 0 and i != 0:
         #    rate = [i / 2 for i in rate]
