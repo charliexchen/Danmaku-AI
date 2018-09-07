@@ -13,6 +13,8 @@ import math
 def f(env):
     return env.eval_fitness(1000)
 
+
+
 class Timer():
     #This object tracks the timing
     def __init__(self):
@@ -108,10 +110,9 @@ class population():
 
 
 
-def train(params, import_generation=True):
-    pass
-
 if __name__=="__main__":
+
+    save_path = "saved_nets"
 
     sensor_pos = [
         (0, -10, 1), (10, -10, 1), (-10, -10, 1), (-10, 0, 1), (10, 0, 1),
@@ -122,10 +123,21 @@ if __name__=="__main__":
 
     pop = population(sensor_pos, 100)
 
-    starting_gen=-1
+
+    starting_gen=input("Start from which existing generation? (return empty if no such generation exists):")
+    if starting_gen=="":
+        starting_gen=-1
+    else:
+        try:
+            starting_gen = int (starting_gen)
+        except:
+            print("Error -- input not an integer")
+
     if starting_gen>-1:
-        trained_pop = pickle.load(open("generation{}.p".format(starting_gen), "rb"))
+        file_name = os.path.join(save_path, "generation{}.p".format(starting_gen))
+        trained_pop = pickle.load(open(file_name, "rb"))
         pop.agents = trained_pop
+
 
     rate = [0.25, 0.2]
 
@@ -138,10 +150,13 @@ if __name__=="__main__":
         print("Surviving agents: {}".format(len(pop.agents)))
         pop.breed([rate[0] / (i + 1), rate[1] / (i + 1)])
         print("saving gen {}".format(i))
-        pickle.dump(pop.agents, open("generation{}.p".format(i), "wb"))
+
+        file_name = os.path.join(save_path, "generation{}.p".format(i))
+
+        pickle.dump(pop.agents, open(file_name, "wb"))
         print("saved gen {}".format(i))
         if i%5==0:
-            GUI.display_imported_generation("generation{}.p".format(i), 3)
+            GUI.display_imported_generation(file_name, 3)
         # if i % 25 == 0 and i != 0:
         #    rate = [i / 2 for i in rate]
         #    print("Decaying learning rate to: {}".format(rate))
