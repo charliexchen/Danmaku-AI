@@ -1,7 +1,7 @@
 import numpy as np
 import copy
 from objects import environ
-from display import gui
+#from display import gui
 from neural_net import dense_net, relu, sigmoid, tanh
 from Neat import Neat
 import pickle
@@ -141,7 +141,7 @@ if __name__=="__main__":
 
     rate = [0.25, 0.2]
 
-    GUI = gui()
+    #GUI = gui()
     for i in range(starting_gen+1,1000):
         print("Evaluating fitness...")
         pop.find_fitness(1000)
@@ -155,8 +155,8 @@ if __name__=="__main__":
 
         pickle.dump(pop.agents, open(file_name, "wb"))
         print("saved gen {}".format(i))
-        if i%5==0:
-            GUI.display_imported_generation(file_name, 3)
+        #if i%5==0:
+        #    GUI.display_imported_generation(file_name, 3)
         # if i % 25 == 0 and i != 0:
         #    rate = [i / 2 for i in rate]
         #    print("Decaying learning rate to: {}".format(rate))
