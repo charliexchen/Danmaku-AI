@@ -79,7 +79,10 @@ class dense_net():
             else:
                 assert (len(input) == self.input_size)
         except AssertionError:
-            print("Input size incorrect: expected {} but obtained {}".format(self.input_size, len(input)))
+            if self.recursive:
+                print("Input size incorrect: expected {} but obtained {}".format(self.input_size+self.rec_size, len(input)))
+            else:
+                print("Input size incorrect: expected {} but obtained {}".format(self.input_size, len(input)))
 
 
         output = input

@@ -1,7 +1,7 @@
 import math, copy
 import numpy as np
 from functools import reduce
-
+import pdb
 
 
 def sqdist(p1, p2):
@@ -75,18 +75,24 @@ class line_sensor:
         pass
 
 class ship:
-    def __init__(self, maxvel, initpos, rad, sensorpos, sensors= {"point":[(0, -5)], "ray":[], "prox":0, "pos":False}):
-        #self.sensors = sensors
+    def __init__(self, maxvel, initpos, rad, sensors= {"point":[(0, -5)], "ray":[], "prox":0, "pos":False}):
+
+        self.sensors = sensors
         #sets cap on speed
         self.maxvel = maxvel
         #initialises position
         self.pos = initpos
+        #pdb.set_trace()
+
         #determines the type of sensors
-        if type(sensorpos) != int:
-            self.sensors = [point_sensor(initpos, i[:2], i[2]) for i in sensorpos]
-        else:
-            self.sensors = sensorpos
-            self.highlightedpos = [(0, 0)] * sensorpos
+        if "point" in self.sensors:
+            self.point_sensors = [point_sensor(initpos, i[:2], i[2]) for i in self.sensors["point"]]
+        if "prox" in self.sensors:
+            self.prox_sensors = self.sensors["prox"]
+            self.highlightedpos = [(0, 0)] * self.prox_sensors
+
+
+
         #size of hitbox
         self.rad = rad
 
@@ -98,14 +104,14 @@ class ship:
     def sense(self, bullets, boundary):
         #returns an array contains the information from the sensors
         output = []
-
-        for sensor in self.sensors:
+        for sensor in self.point_sensors:
             output.append(sensor.sense(self.pos, bullets, boundary))
         return output
 
     def mutate_sensors(self, scale):
-        for sensor in self.sensors:
-            sensor.mutate(scale)
+        if "point" in self.sensors:
+            for sensor in self.point_sensors:
+                sensor.mutate(scale)
 
 class environ:
     def __init__(self, hyperparams, boundary=[200, 200], bullet_cap=100, shipinit=[100, 100],
@@ -118,7 +124,7 @@ class environ:
         # This is the hyperparameters for the environment -- the sensor values of ths ship and the neural network behind it
         self.sensors, self.controller = hyperparams
         # Initialise the ship
-        self.fighter = ship(6, shipinit, 1, self.sensors)
+        self.fighter = ship(8, shipinit, 1, self.sensors)
         self.shipinit = shipinit
 
         # These dictinaries wstore the cooldowns for each bullet spawner
@@ -205,18 +211,21 @@ class environ:
 
     def shipsensors(self, radial=True):
         #returns sensor values
-
-        if type(self.fighter.sensors) == int:
+        output = []
+        if "point" in self.fighter.sensors:
+            # Return a binary array indicating which sensor has been triggered
+            output+= self.fighter.sense(self.bullets, self.boundary)
+        if "prox" in self.fighter.sensors and self.fighter.sensors["prox"]>0:
             # Try to detect closest bullets
             boundarypos = [[self.fighter.pos[0], 0], [self.fighter.pos[0], self.boundary[1]], [0, self.fighter.pos[1]],
                            [self.boundary[0], self.fighter.pos[1]]]
             bulletpos = [bullet.pos for bullet in self.bullets]
             bulletpos = bulletpos + boundarypos
             list.sort(bulletpos, key=lambda p: sqdist(p, self.fighter.pos))
-            if self.fighter.sensors > len(bulletpos):
-                bulletpos += [self.spawn] * (self.fighter.sensors - len(bulletpos))
+            if self.fighter.prox_sensors > len(bulletpos):
+                bulletpos += [self.spawn] * (self.fighter.prox_sensors - len(bulletpos))
             else:
-                bulletpos = bulletpos[:self.fighter.sensors]
+                bulletpos = bulletpos[:self.sensors["prox"]]
             self.fighter.highlightedpos = bulletpos
             if radial:
                 closestdata = [[math.log(sqdist(bpos, self.fighter.pos)), angle(bpos, self.fighter.pos)] for
@@ -224,12 +233,12 @@ class environ:
             else:
                 closestdata = [[(bpos[i] - self.fighter.pos[i]) / self.boundary[i] for i in range(2)] for bpos in
                                bulletpos]
-            output = list(reduce((lambda x, y: x + y), closestdata))
-            return output
-        else:
-            # Return a binary array indicating which sensor has been triggered
-            return self.fighter.sense(self.bullets, self.boundary) + [(self.fighter.pos[i] / self.boundary[i]) - 0.5 for
-                                                                      i in range(2)]
+            output+=list(reduce((lambda x, y: x + y), closestdata))
+
+
+        if "loc" in self.fighter.sensors:
+            output += [(self.fighter.pos[i] / self.boundary[i]) - 0.5 for i in range(2)]
+        return output
 
     def eval_fitness(self, maxtime):
         # Runs an episode where the environment spawns bullets until the ship is hit

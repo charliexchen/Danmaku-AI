@@ -36,13 +36,19 @@ class Timer():
         print(text+ ": {}".format(self.elapsed(time.time() - self.start_time)))
 
 class population():
-    def __init__(self, sensorpos, pop_size=100, multithread=False, procs=cpu_count()):
+    def __init__(self, sensors, pop_size=100, multithread=False, procs=cpu_count()):
         #initialise the population of agents
         self.agents = []
+        input_len=0
+        if "point" in sensors:
+            input_len += len(sensors["point"])
+        if "prox" in sensors:
+            input_len += 2 * sensors["prox"]
+        if "loc" in sensors:
+            input_len += 2
         for i in range(pop_size):
 
-
-            self.agents.append(environ((sensorpos, dense_net(29,14,relu, recursive=True, rec_size=5)), bullet_types={"aimed": 15, "spiral": 1, "random": 1}))
+            self.agents.append(environ((sensors, dense_net(input_len,14,relu, recursive=True, rec_size=5)), bullet_types={"aimed": 15, "spiral": 1, "random": 1}))
 
             #Neat(25, 2, tanh)
             self.agents[-1].controller.add_layer(14, relu)

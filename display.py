@@ -39,7 +39,7 @@ class gui:
 
         self.display_net((sensorpos, fittest.controller), loops)
 
-    def display_net(self, hyperparams, loops=-1, bullet_types={ "random": 1}):
+    def display_net(self, hyperparams, loops=-1, bullet_types={"random": 100}):
 
         pygame.init()
         # Create an 800x600 sized screen
@@ -65,13 +65,15 @@ class gui:
                 pygame.draw.circle(screen, WHITE, dispos(bullet.pos), bullet.rad)
             pygame.draw.circle(screen, CYAN, dispos(env.fighter.pos), env.fighter.rad)
             activesensors = env.shipsensors()
-            if type(env.fighter.sensors) != int:
-                for i in range(len(env.fighter.sensors)):
+
+            if "point" in env.fighter.sensors:
+                for i in range(len(env.fighter.point_sensors)):
                     if activesensors[i] == 0:
-                        pygame.draw.circle(screen, GREEN, dispos(env.fighter.sensors[i].pos), 1)
+                        pygame.draw.circle(screen, GREEN, dispos(env.fighter.point_sensors[i].pos), 1)
                     else:
-                        pygame.draw.circle(screen, RED, dispos(env.fighter.sensors[i].pos), 3)
-            else:
+                        pygame.draw.circle(screen, RED, dispos(env.fighter.point_sensors[i].pos), 3)
+
+            if "prox" in env.fighter.sensors:
                 for incoming in env.fighter.highlightedpos:
                     pygame.draw.line(screen, RED, dispos(incoming), dispos(env.fighter.pos))
                     if incoming[0] == 0:
@@ -93,21 +95,28 @@ class gui:
 
 
 if __name__ == "__main__":
-    sensorpos = [
+    sensors = {"point": [
         (0, -10, 1), (10, -10, 1), (-10, -10, 1), (-10, 0, 1), (10, 0, 1),
         (0, -20, 1), (20, -20, 1), (-20, -20, 1), (-20, 0, 1), (20, 0, 1),
         (0, -30, 1), (30, -30, 1), (-30, -30, 1), (-30, 0, 1), (30, 0, 1),
         (0, -50, 1), (10, -20, 1), (-10, -20, 1), (-50, 0, 1), (50, 0, 1),
-        (0, 15, 1), (10, -30, 1), (-10, -30, 1)]
-    # pdb.set_trace()
+        (0, 15, 1), (10, -30, 1), (-10, -30, 1)],
+        "prox": 3, "loc":True}
 
-    net = dense_net(16, 10, relu, recursive=True)
+    input_len = 0
+    if "point" in sensors:
+        input_len += len(sensors["point"])
+    if "prox" in sensors:
+        input_len += 2 * sensors["prox"]
+    if "loc" in sensors:
+        input_len += 2
+    net = dense_net(input_len, 10, relu, recursive=False)
     net.add_layer(10, tanh)
-    env = environ((8, net))
-    print("Profiling fitness evaluation times")
-    cProfile.run('env.eval_fitness(500)')
+    # env = environ((8, net))
+    # print("Profiling fitness evaluation times")
+    # cProfile.run('env.eval_fitness(500)')
 
     GUI = gui()
-    hyperparams = (8, net)
-    GUI.display_imported_generation("generation169.p")
-    # GUI.display_net(hyperparams, bullet_types={"spiral":1})
+    hyperparams = (sensors, net)
+    # GUI.display_imported_generation("generation169.p")
+    GUI.display_net(hyperparams, bullet_types={"spiral": 15})
