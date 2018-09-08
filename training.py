@@ -162,7 +162,7 @@ if __name__=="__main__":
         print("Selecting fittest")
         pop.select()
         print("Surviving agents: {}".format(len(pop.agents)))
-        pop.breed([rate[0]/(1+i), rate[1]/(1+i)])
+        pop.breed([rate[0]/((1+i)), rate[1]/((1+i))])
         print("saving gen {}".format(i))
 
         file_name = os.path.join(save_path, "generation{}.p".format(i))
