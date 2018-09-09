@@ -24,22 +24,30 @@ class gui:
 
     def display_imported_generation(self, filename="generation450.p", loops=-1):
         trained_pop = pickle.load(open(filename, "rb"))
+        #pdb.set_trace()
         print("Imported {}".format(filename))
         fittest = max(trained_pop, key=lambda x: x.fitness)
         print("Fitness of best performer: {}".format(fittest.fitness))
         net = fittest.controller
 
-        if type(fittest.fighter.sensors) == int:
-            sensortype = "Proximity"
-            sensorpos = fittest.sensors
-        else:
-            sensortype = "Pixel"
-            sensorpos = [tuple(list(sensor.relpos) + [1.0]) for sensor in fittest.fighter.sensors]
-        print("Extracted sensor of type: {}".format(sensortype))
+        sensors = fittest.fighter.sensors
+        if "prox" in sensors:
+            print("{} proxmimity sensors extracted".format(sensors["prox"]))
+        if "loc" in sensors:
+            print("Location sensors extracted")
+        if "pixel" in sensors:
+            print("Pixels sensors extracted")
+        #if type() == int:
+        #    sensortype = "Proximity"
+        #    sensorpos = fittest.sensors
+        #else:
+        #    sensortype = "Pixel"
+        #    sensors = [tuple(list(sensor.relpos) + [1.0]) for sensor in fittest.fighter.sensors]
+        #print("Extracted sensor of type: {}".format(sensortype))
 
-        self.display_net((sensorpos, fittest.controller), loops)
+        self.display_net((sensors, net), loops)
 
-    def display_net(self, hyperparams, loops=-1, bullet_types={"random": 100}):
+    def display_net(self, hyperparams, loops=-1, bullet_types={"spiral": 1, "aimed:": 15, "random":1}):
 
         pygame.init()
         # Create an 800x600 sized screen
@@ -101,7 +109,7 @@ if __name__ == "__main__":
         (0, -30, 1), (30, -30, 1), (-30, -30, 1), (-30, 0, 1), (30, 0, 1),
         (0, -50, 1), (10, -20, 1), (-10, -20, 1), (-50, 0, 1), (50, 0, 1),
         (0, 15, 1), (10, -30, 1), (-10, -30, 1)],
-        "prox": 3, "loc":True}
+        "prox": 3, "loc": True}
 
     input_len = 0
     if "point" in sensors:
@@ -118,5 +126,5 @@ if __name__ == "__main__":
 
     GUI = gui()
     hyperparams = (sensors, net)
-    # GUI.display_imported_generation("generation169.p")
-    GUI.display_net(hyperparams, bullet_types={"spiral": 15})
+    GUI.display_imported_generation("generation59.p")
+    #GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})
