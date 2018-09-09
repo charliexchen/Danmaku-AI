@@ -31,7 +31,7 @@ if __name__=="__main__":
     # Create the population, which is the top-level object for a NEAT run.
     p = neat.Population(config)
 
-    p.add_reporter(neat.Checkpointer(5))
+    p.add_reporter(neat.Checkpointer(5,filename_prefix="saved_nets/neat-checkpoint-"))
     # Add a stdout reporter to show progress in the terminal.
     p.add_reporter(neat.StdOutReporter(False))
 
