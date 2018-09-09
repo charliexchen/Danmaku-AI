@@ -48,12 +48,12 @@ class population():
             input_len += 2
         for i in range(pop_size):
 
-            self.agents.append(environ((sensors, dense_net(input_len,14,relu, recursive=True, rec_size=5)), bullet_types={"aimed": 15, "spiral": 1, "random": 1}))
+            self.agents.append(environ((sensors, dense_net(input_len,32,relu, recursive=True, rec_size=8)), bullet_types={"aimed": 15, "spiral": 1, "random": 1}))
 
             #Neat(25, 2, tanh)
-            self.agents[-1].controller.add_layer(14, relu)
-            self.agents[-1].controller.add_layer(10, relu)
-            self.agents[-1].controller.add_layer(10, relu)
+            self.agents[-1].controller.add_layer(32, relu)
+            self.agents[-1].controller.add_layer(16, relu)
+            self.agents[-1].controller.add_layer(16, relu)
             self.agents[-1].controller.add_layer(2, tanh, final=True)
 
         self.pop_size = pop_size
@@ -120,13 +120,13 @@ if __name__=="__main__":
 
     save_path = "saved_nets"
 
-    sensor_pos =  {"point": [
-        (0, -10, 1), (10, -10, 1), (-10, -10, 1), (-10, 0, 1), (10, 0, 1),
-        (0, -20, 1), (20, -20, 1), (-20, -20, 1), (-20, 0, 1), (20, 0, 1),
-        (0, -30, 1), (30, -30, 1), (-30, -30, 1), (-30, 0, 1), (30, 0, 1),
-        (0, -50, 1), (10, -20, 1), (-10, -20, 1), (-50, 0, 1), (50, 0, 1),
-        (0, 15, 1), (10, -30, 1), (-10, -30, 1)],
-        "prox": 3, "loc":True}
+    #sensor_pos =  {"point": [
+    #    (0, -10, 1), (10, -10, 1), (-10, -10, 1), (-10, 0, 1), (10, 0, 1),
+    #    (0, -20, 1), (20, -20, 1), (-20, -20, 1), (-20, 0, 1), (20, 0, 1),
+    #    (0, -30, 1), (30, -30, 1), (-30, -30, 1), (-30, 0, 1), (30, 0, 1),
+    #    (0, -50, 1), (10, -20, 1), (-10, -20, 1), (-50, 0, 1), (50, 0, 1),
+    #    (0, 15, 1), (10, -30, 1), (-10, -30, 1),(0,-3,1),(3,0, 1), (-3,0,1)],
+    sensor_pos={"point":[],   "prox": 10, "loc":True}
 
 
     pop = population(sensor_pos, 250)
