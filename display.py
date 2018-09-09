@@ -47,7 +47,7 @@ class gui:
 
         self.display_net((sensors, net), loops)
 
-    def display_net(self, hyperparams, loops=-1, bullet_types={"spiral": 1, "aimed:": 15, "random":1}):
+    def display_net(self, hyperparams, loops=-1, bullet_types={"aimed:": 15, "random":1, "spiral":2}):
 
         pygame.init()
         # Create an 800x600 sized screen
@@ -126,5 +126,5 @@ if __name__ == "__main__":
 
     GUI = gui()
     hyperparams = (sensors, net)
-    GUI.display_imported_generation("generation59.p")
+    GUI.display_imported_generation("generation269.p")
     #GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})

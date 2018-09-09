@@ -194,7 +194,7 @@ class environ:
         self.bullets = newbullets
 
         # Move the ship according to sensor data
-        self.fighter.move(self.controller.evaluate(self.shipsensors()))
+        self.fighter.move(self.controller.activate(self.shipsensors()))
 
         # check collisions
         # ship and boundary of screen
