@@ -11,7 +11,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 CYAN = (0, 255, 255)
-MAGENTA = (255, 0, 255)
+DMAGENTA = (120, 0, 120)
 
 
 # function for rounding floats for display
@@ -23,9 +23,10 @@ class gui:
     def __init__(self, boundary=[200, 200]):
         self.boundary = boundary
 
-    def display_imported_generation(self, filename="generation450.p", loops=-1,bullet_types={"spiral": 1, "aimed:": 15}):
+    def display_imported_generation(self, filename="generation450.p", loops=-1,
+                                    bullet_types={"spiral": 1, "aimed:": 15}):
         trained_pop = pickle.load(open(filename, "rb"))
-        #pdb.set_trace()
+        # pdb.set_trace()
         print("Imported {}".format(filename))
         fittest = max(trained_pop, key=lambda x: x.fitness)
         print("Fitness of best performer: {}".format(fittest.fitness))
@@ -41,7 +42,8 @@ class gui:
 
         self.display_net((sensors, net), loops, bullet_types)
 
-    def display_net(self, hyperparams, loops=-1, bullet_types={"aimed:": 15, "random":1, "spiral":2}, displaySensors=set(["line"])):
+    def display_net(self, hyperparams, loops=-1, bullet_types={"aimed:": 15, "random": 1, "spiral": 2},
+                    displaySensors=set(["line", "prox", "point"])):
 
         pygame.init()
 
@@ -65,11 +67,15 @@ class gui:
             for bullet in env.bullets:
                 pygame.draw.circle(screen, WHITE, dispos(bullet.pos), bullet.rad)
 
-            activesensors = env.shipsensors()
             if displaySensors:
-                pygame.draw.circle(screen, CYAN, dispos(env.fighter.pos), env.fighter.rad)
 
+                if "line" in env.fighter.sensors and "line" in displaySensors:
+                    for sensor in env.fighter.line_sensors:
+                        detect_pos = [math.sin(sensor.dir) * sensor.dist + env.fighter.pos[0],
+                                      math.cos(sensor.dir) * sensor.dist + env.fighter.pos[1]]
+                        pygame.draw.line(screen, DMAGENTA, env.fighter.pos, detect_pos)
                 if "point" in env.fighter.sensors and "point" in displaySensors:
+                    activesensors = env.shipsensors()[16:]
                     for i in range(len(env.fighter.point_sensors)):
                         if activesensors[i] == 0:
                             pygame.draw.circle(screen, GREEN, dispos(env.fighter.point_sensors[i].pos), 1)
@@ -91,14 +97,12 @@ class gui:
                                              (self.boundary[0], self.boundary[1] - 1))
                         else:
                             pygame.draw.circle(screen, RED, dispos(incoming), 10, 1)
-                if "line" in env.fighter.sensors and "line" in displaySensors:
-                    for sensor in env.fighter.line_sensors:
-                        detect_pos = [math.sin(sensor.dir) * sensor.dist+env.fighter.pos[0],math.cos(sensor.dir) * sensor.dist+env.fighter.pos[1]]
-                        pygame.draw.line(screen, MAGENTA, env.fighter.pos, detect_pos)
+                pygame.draw.circle(screen, CYAN, dispos(env.fighter.pos), env.fighter.rad+1)
+
             else:
-                pygame.draw.circle(screen, CYAN, dispos(env.fighter.pos), env.fighter.rad+2)
+                pygame.draw.circle(screen, CYAN, dispos(env.fighter.pos), env.fighter.rad + 2)
             pygame.display.flip()
-            clock.tick(30)
+            clock.tick(24)
         pygame.quit()
 
 
@@ -109,7 +113,7 @@ if __name__ == "__main__":
         (0, -30, 1), (30, -30, 1), (-30, -30, 1), (-30, 0, 1), (30, 0, 1),
         (0, -50, 1), (10, -20, 1), (-10, -20, 1), (-50, 0, 1), (50, 0, 1),
         (0, 15, 1), (10, -30, 1), (-10, -30, 1)],
-        "prox": 3,"line":12, "loc": True}
+        "prox": 3, "line": 12, "loc": True}
 
     input_len = 0
     if "point" in sensors:
@@ -128,5 +132,5 @@ if __name__ == "__main__":
 
     GUI = gui()
     hyperparams = (sensors, net)
-    GUI.display_imported_generation("generation269.p",bullet_types={"random":1})
-    #GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})
+    GUI.display_imported_generation("generation53.p", bullet_types={ "spiral": 1,"aimed": 30, "random":5})
+    # GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})

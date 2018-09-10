@@ -86,9 +86,11 @@ class population():
         print("Lowest fitness: {}".format(self.agents[0].fitness))
         print("Highest fitness: {}".format(self.agents[-1].fitness))
         print("Top 10 agents fitness: {}".format([agent.fitness for agent in self.agents][-10:]))
-        print("Average fitness: {}".format(np.mean(self.agents[-1].fitness)))
+        print("Average fitness: {}".format(np.mean([agent.fitness for agent in self.agents])))
+        print("Variance of fitness: {}".format(np.var([agent.fitness for agent in self.agents])))
         new_agents = []
-        for i in range(int(self.pop_size * (9 / 10)), self.pop_size):
+        print(self.pop_size * (99 / 100))
+        for i in range(int(self.pop_size * (99 / 100)), self.pop_size):
             if (i + 1) / self.pop_size > np.random.uniform(0, 1.0):
                 new_agents.append(self.agents[i])
         self.agents = new_agents
@@ -154,7 +156,7 @@ if __name__ == "__main__":
 
         GUI = gui()
 
-    for i in range(starting_gen + 1, 1000):
+    for i in range(starting_gen + 1, 10000):
         print("Evaluating fitness...")
         pop.find_fitness(1000)
         print("Selecting fittest")

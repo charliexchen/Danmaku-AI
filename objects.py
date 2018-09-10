@@ -84,13 +84,12 @@ class point_sensor:
 
 class line_sensor:
     def __init__(self, dir, boundary, log=True):
-        self.dir = sub_angle(dir,0)
+        self.dir = sub_angle(dir, 0)
         # direction of the line sensor is stored as a vector to simply calculations
         self.boundary = boundary
         self.max_output = sqdist((0, 0), boundary)
         self.dist = self.max_output
         self.log = log
-
 
     def sense(self, pos, bullets):
         output = self.max_output
@@ -131,7 +130,8 @@ class line_sensor:
 
 
 class ship:
-    def __init__(self, maxvel, initpos, rad, boundary, sensors={"point": [(0, -5)], "line": 8, "prox": 0, "pos": False}):
+    def __init__(self, maxvel, initpos, rad, boundary,
+                 sensors={"point": [(0, -5)], "line": 8, "prox": 0, "pos": False}):
         self.sensors = sensors
         # sets cap on speed
         self.maxvel = maxvel
@@ -147,7 +147,7 @@ class ship:
             self.highlightedpos = [(0, 0)] * self.prox_sensors
         if "line" in self.sensors:
             count = self.sensors["line"]
-            self.line_sensors = [line_sensor(2*math.pi*i/count, boundary) for i in range(count)]
+            self.line_sensors = [line_sensor(2 * math.pi * i / count, boundary) for i in range(count)]
 
         # size of hitbox
         self.rad = rad
@@ -211,6 +211,7 @@ class environ:
     def spawn_bullets(self):
         # This function is responsible for spawning the danmaku patterns
         for bullet_type in self.bullet_cooldowns:
+
             # decrement counters
             self.bullet_counter[bullet_type] -= 1
             # spawn bullets if countdown due
