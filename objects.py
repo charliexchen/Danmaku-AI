@@ -274,7 +274,7 @@ class environ:
     def shipsensors(self, radial=True):
         # returns sensor values
         output = []
-        if "point" in self.fighter.sensors:
+        if "point" in self.fighter.sensors or "line" in self.fighter.sensors:
             # Return a binary array indicating which sensor has been triggered
             output += self.fighter.sense(self.bullets, self.boundary)
         if "prox" in self.fighter.sensors and self.fighter.sensors["prox"] > 0:

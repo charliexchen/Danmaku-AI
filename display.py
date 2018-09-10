@@ -48,7 +48,7 @@ class gui:
 
         self.display_net((sensors, net), loops)
 
-    def display_net(self, hyperparams, loops=-1, bullet_types={"aimed:": 15, "random":1, "spiral":2}, displaySensors=True):
+    def display_net(self, hyperparams, loops=-1, bullet_types={"aimed:": 15, "random":1, "spiral":2}, displaySensors=set(["line"])):
 
         pygame.init()
 
@@ -75,14 +75,15 @@ class gui:
             activesensors = env.shipsensors()
             if displaySensors:
                 pygame.draw.circle(screen, CYAN, dispos(env.fighter.pos), env.fighter.rad)
-                if "point" in env.fighter.sensors:
+
+                if "point" in env.fighter.sensors and "point" in displaySensors:
                     for i in range(len(env.fighter.point_sensors)):
                         if activesensors[i] == 0:
                             pygame.draw.circle(screen, GREEN, dispos(env.fighter.point_sensors[i].pos), 1)
                         else:
                             pygame.draw.circle(screen, RED, dispos(env.fighter.point_sensors[i].pos), 3)
 
-                if "prox" in env.fighter.sensors:
+                if "prox" in env.fighter.sensors and "prox" in displaySensors:
                     for incoming in env.fighter.highlightedpos:
                         pygame.draw.line(screen, RED, dispos(incoming), dispos(env.fighter.pos))
                         if incoming[0] == 0:
@@ -97,7 +98,7 @@ class gui:
                                              (self.boundary[0], self.boundary[1] - 1))
                         else:
                             pygame.draw.circle(screen, RED, dispos(incoming), 10, 1)
-                if "line" in env.fighter.sensors:
+                if "line" in env.fighter.sensors and "line" in displaySensors:
                     for sensor in env.fighter.line_sensors:
                         detect_pos = [math.sin(sensor.dir) * sensor.dist+env.fighter.pos[0],math.cos(sensor.dir) * sensor.dist+env.fighter.pos[1]]
                         pygame.draw.line(screen, MAGENTA, env.fighter.pos, detect_pos)
