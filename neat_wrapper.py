@@ -37,8 +37,8 @@ if __name__=="__main__":
 
     # Run until a solution is found.
 
-    pe = neat.ParallelEvaluator(4, eval_genome)
-    winner = p.run(pe.evaluate, 50)
+    pe = neat.ParallelEvaluator(36, eval_genome)
+    winner = p.run(pe.evaluate, 5000)
 
     # Display the winning genome.
     print('\nBest genome:\n{!s}'.format(winner))
