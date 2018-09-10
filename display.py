@@ -1,6 +1,6 @@
 import pygame
-import pickle
-from objects import environ
+import pickle, math
+from objects import environ, angle
 from neural_net import dense_net, relu, sigmoid, tanh
 import pdb, cProfile
 
@@ -11,6 +11,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 CYAN = (0, 255, 255)
+MAGENTA = (255, 0, 255)
 
 
 # function for rounding floats for display
@@ -47,10 +48,9 @@ class gui:
 
         self.display_net((sensors, net), loops)
 
-    def display_net(self, hyperparams, loops=-1, bullet_types={"aimed:": 15, "random":1, "spiral":2}):
+    def display_net(self, hyperparams, loops=-1, bullet_types={"aimed:": 15, "random":1, "spiral":2}, displaySensors=set(["line"])):
 
         pygame.init()
-        # Create an 800x600 sized screen
 
         screen = pygame.display.set_mode(self.boundary)
 
@@ -71,32 +71,39 @@ class gui:
             screen.fill(BLACK)
             for bullet in env.bullets:
                 pygame.draw.circle(screen, WHITE, dispos(bullet.pos), bullet.rad)
-            pygame.draw.circle(screen, CYAN, dispos(env.fighter.pos), env.fighter.rad)
+
             activesensors = env.shipsensors()
+            if displaySensors:
+                pygame.draw.circle(screen, CYAN, dispos(env.fighter.pos), env.fighter.rad)
 
-            if "point" in env.fighter.sensors:
-                for i in range(len(env.fighter.point_sensors)):
-                    if activesensors[i] == 0:
-                        pygame.draw.circle(screen, GREEN, dispos(env.fighter.point_sensors[i].pos), 1)
-                    else:
-                        pygame.draw.circle(screen, RED, dispos(env.fighter.point_sensors[i].pos), 3)
+                if "point" in env.fighter.sensors and "point" in displaySensors:
+                    for i in range(len(env.fighter.point_sensors)):
+                        if activesensors[i] == 0:
+                            pygame.draw.circle(screen, GREEN, dispos(env.fighter.point_sensors[i].pos), 1)
+                        else:
+                            pygame.draw.circle(screen, RED, dispos(env.fighter.point_sensors[i].pos), 3)
 
-            if "prox" in env.fighter.sensors:
-                for incoming in env.fighter.highlightedpos:
-                    pygame.draw.line(screen, RED, dispos(incoming), dispos(env.fighter.pos))
-                    if incoming[0] == 0:
-                        pygame.draw.line(screen, RED, (1, 0), (1, self.boundary[1]))
-                    elif incoming[0] == self.boundary[0]:
-                        pygame.draw.line(screen, RED, (self.boundary[0] - 1, 0),
-                                         (self.boundary[0] - 1, self.boundary[1]))
-                    elif incoming[1] == 0:
-                        pygame.draw.line(screen, RED, (0, 1), (self.boundary[0], 1))
-                    elif incoming[1] == self.boundary[1]:
-                        pygame.draw.line(screen, RED, (0, self.boundary[1] - 1),
-                                         (self.boundary[0], self.boundary[1] - 1))
-                    else:
-                        pygame.draw.circle(screen, RED, dispos(incoming), 10, 1)
-                # pygame.draw.circle(screen,, dispos(env.fighter.pos), env.fighter.rad)
+                if "prox" in env.fighter.sensors and "prox" in displaySensors:
+                    for incoming in env.fighter.highlightedpos:
+                        pygame.draw.line(screen, RED, dispos(incoming), dispos(env.fighter.pos))
+                        if incoming[0] == 0:
+                            pygame.draw.line(screen, RED, (1, 0), (1, self.boundary[1]))
+                        elif incoming[0] == self.boundary[0]:
+                            pygame.draw.line(screen, RED, (self.boundary[0] - 1, 0),
+                                             (self.boundary[0] - 1, self.boundary[1]))
+                        elif incoming[1] == 0:
+                            pygame.draw.line(screen, RED, (0, 1), (self.boundary[0], 1))
+                        elif incoming[1] == self.boundary[1]:
+                            pygame.draw.line(screen, RED, (0, self.boundary[1] - 1),
+                                             (self.boundary[0], self.boundary[1] - 1))
+                        else:
+                            pygame.draw.circle(screen, RED, dispos(incoming), 10, 1)
+                if "line" in env.fighter.sensors and "line" in displaySensors:
+                    for sensor in env.fighter.line_sensors:
+                        detect_pos = [math.sin(sensor.dir) * sensor.dist+env.fighter.pos[0],math.cos(sensor.dir) * sensor.dist+env.fighter.pos[1]]
+                        pygame.draw.line(screen, MAGENTA, env.fighter.pos, detect_pos)
+            else:
+                pygame.draw.circle(screen, CYAN, dispos(env.fighter.pos), env.fighter.rad+2)
             pygame.display.flip()
             clock.tick(30)
         pygame.quit()
@@ -109,13 +116,15 @@ if __name__ == "__main__":
         (0, -30, 1), (30, -30, 1), (-30, -30, 1), (-30, 0, 1), (30, 0, 1),
         (0, -50, 1), (10, -20, 1), (-10, -20, 1), (-50, 0, 1), (50, 0, 1),
         (0, 15, 1), (10, -30, 1), (-10, -30, 1)],
-        "prox": 3, "loc": True}
+        "prox": 3,"line":12, "loc": True}
 
     input_len = 0
     if "point" in sensors:
         input_len += len(sensors["point"])
     if "prox" in sensors:
         input_len += 2 * sensors["prox"]
+    if "line" in sensors:
+        input_len += sensors["line"]
     if "loc" in sensors:
         input_len += 2
     net = dense_net(input_len, 10, relu, recursive=False)
@@ -126,5 +135,5 @@ if __name__ == "__main__":
 
     GUI = gui()
     hyperparams = (sensors, net)
-    GUI.display_imported_generation("generation269.p")
-    #GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})
+    #GUI.display_imported_generation("generation269.p")
+    GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})
