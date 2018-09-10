@@ -24,7 +24,7 @@ class dense_layer():
         self.output_size = output_size
         self.activation = activation
 
-    def evaluate(self, input):
+    def activate(self, input):
         try:
             assert (len(input) == self.input_size)
         except AssertionError:
@@ -65,7 +65,7 @@ class dense_net():
         else:
             self.layers.append(dense_layer(self.layers[-1].output_size, output_size, activation, initvar))
 
-    def evaluate(self, input):
+    def activate(self, input):
         if self.recursive:
             try:
                 assert self.finalised
@@ -87,7 +87,7 @@ class dense_net():
 
         output = input
         for layer in self.layers:
-            output = layer.evaluate(output)
+            output = layer.activate(output)
 
 
 
@@ -128,16 +128,16 @@ if __name__ == "__main__":
     net = dense_net(3, 10, tanh)
     print(net.layers[0].weights)
     net.add_layer(2, tanh)
-    print(net.evaluate(np.array([1, 1, 1])))
+    print(net.activate(np.array([1, 1, 1])))
     net.mutate(0.05)
-    print(net.evaluate(np.array([1, 1, 1])))
+    print(net.activate(np.array([1, 1, 1])))
 
 
     def timetest():
         net = dense_net(3, 10, tanh)
         net.add_layer(2, tanh)
         for i in range(1000):
-            net.evaluate(np.array([1, 1, 1]))
+            net.activate(np.array([1, 1, 1]))
 
     import cProfile
 

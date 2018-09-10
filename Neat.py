@@ -201,7 +201,7 @@ class Neat:
             return True
         return False
 
-    def evaluate(self, input):
+    def activate(self, input):
         # Remove the values in all the nodes
         for node in self.nodes:
             node.reset()
@@ -277,7 +277,7 @@ def test_neat():
     # A test function to ensure that the stuff in the Neat module works as intended
 
     neat = Neat(2, 2, identity)
-    # print(neat.evaluate([1, 2]))
+    # print(neat.activate([1, 2]))
     try:
         assert not neat.find_path(0, 1)
         assert not neat.find_path(2, 3)
@@ -294,10 +294,10 @@ def test_neat():
         # assert neat.find_path(0, 3)
     except AssertionError:
         print("Error in pathfinder")
-    # print(neat.evaluate([1, 1]))
-    print(neat.evaluate([1, 0]))
+    # print(neat.activate([1, 1]))
+    print(neat.activate([1, 0]))
 
-    print(neat.evaluate([1, 0]))
+    print(neat.activate([1, 0]))
 
 
 def timetest():
