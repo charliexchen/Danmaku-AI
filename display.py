@@ -23,7 +23,7 @@ class gui:
     def __init__(self, boundary=[200, 200]):
         self.boundary = boundary
 
-    def display_imported_generation(self, filename="generation450.p", loops=-1):
+    def display_imported_generation(self, filename="generation450.p", loops=-1,bullet_types={"spiral": 1, "aimed:": 15}):
         trained_pop = pickle.load(open(filename, "rb"))
         #pdb.set_trace()
         print("Imported {}".format(filename))
@@ -38,15 +38,8 @@ class gui:
             print("Location sensors extracted")
         if "pixel" in sensors:
             print("Pixels sensors extracted")
-        #if type() == int:
-        #    sensortype = "Proximity"
-        #    sensorpos = fittest.sensors
-        #else:
-        #    sensortype = "Pixel"
-        #    sensors = [tuple(list(sensor.relpos) + [1.0]) for sensor in fittest.fighter.sensors]
-        #print("Extracted sensor of type: {}".format(sensortype))
 
-        self.display_net((sensors, net), loops)
+        self.display_net((sensors, net), loops, bullet_types)
 
     def display_net(self, hyperparams, loops=-1, bullet_types={"aimed:": 15, "random":1, "spiral":2}, displaySensors=set(["line"])):
 
@@ -135,5 +128,5 @@ if __name__ == "__main__":
 
     GUI = gui()
     hyperparams = (sensors, net)
-    #GUI.display_imported_generation("generation269.p")
-    GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})
+    GUI.display_imported_generation("generation269.p",bullet_types={"random":1})
+    #GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})
