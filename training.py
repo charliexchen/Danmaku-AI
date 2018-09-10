@@ -13,7 +13,6 @@ import math
 def f(env):
     return env.eval_fitness(1000)
 
-
 class Timer():
     # This object tracks the timing
     def __init__(self):
@@ -37,7 +36,6 @@ class Timer():
     def elapsed_time(self, text="Time Elapsed"):
         print(text + ": {}".format(self.elapsed(time.time() - self.start_time)))
 
-
 class population():
     def __init__(self, sensors, pop_size=100, multithread=False, procs=cpu_count()):
         # initialise the population of agents
@@ -52,12 +50,12 @@ class population():
         if "line" in sensors:
             input_len += sensors["line"]
         for i in range(pop_size):
-            self.agents.append(environ((sensors, dense_net(input_len, 32, relu, recursive=True, rec_size=8)),
+            self.agents.append(environ((sensors, dense_net(input_len, 64, relu, recursive=True, rec_size=16)),
                                        bullet_types={"aimed": 15, "spiral": 1, "random": 1}))
-
             # Neat(25, 2, tanh)
+            self.agents[-1].controller.add_layer(64, relu)
             self.agents[-1].controller.add_layer(32, relu)
-            self.agents[-1].controller.add_layer(16, relu)
+
             self.agents[-1].controller.add_layer(16, relu)
             self.agents[-1].controller.add_layer(2, tanh, final=True)
 
@@ -88,6 +86,7 @@ class population():
         print("Lowest fitness: {}".format(self.agents[0].fitness))
         print("Highest fitness: {}".format(self.agents[-1].fitness))
         print("Top 10 agents fitness: {}".format([agent.fitness for agent in self.agents][-10:]))
+        print("Average fitness: {}".format(np.mean(self.agents[-1].fitness)))
         new_agents = []
         for i in range(int(self.pop_size * (9 / 10)), self.pop_size):
             if (i + 1) / self.pop_size > np.random.uniform(0, 1.0):
@@ -121,16 +120,16 @@ if __name__ == "__main__":
 
     save_path = "saved_nets"
 
-    #sensor_pos = {"point": [
-    #    (0, -10, 1), (10, -10, 1), (-10, -10, 1), (-10, 0, 1), (10, 0, 1),
-    #    (0, -20, 1), (20, -20, 1), (-20, -20, 1), (-20, 0, 1), (20, 0, 1),
-    #    (0, -30, 1), (30, -30, 1), (-30, -30, 1), (-30, 0, 1), (30, 0, 1),
-    #    (0, -50, 1), (10, -20, 1), (-10, -20, 1), (-50, 0, 1), (50, 0, 1),
-    #    (0, 15, 1), (10, -30, 1), (-10, -30, 1), (0, -3, 1), (3, 0, 1), (-3, 0, 1)],
-    #    "prox": 5, "loc": True}
+    sensor_pos = {"point": [
+        (0, -10, 1), (10, -10, 1), (-10, -10, 1), (-10, 0, 1), (10, 0, 1),
+        (0, -20, 1), (20, -20, 1), (-20, -20, 1), (-20, 0, 1), (20, 0, 1),
+        (0, -30, 1), (30, -30, 1), (-30, -30, 1), (-30, 0, 1), (30, 0, 1),
+        (10, -20, 1), (-10, -20, 1),
+        (0, 15, 1), (10, -30, 1), (-10, -30, 1), (0, -3, 1), (3, 0, 1), (-3, 0, 1)],
+        "prox": 3, "loc": True, "line": 16}
 
-    sensor_pos = {"loc":True, "line": 16}
-    pop = population(sensor_pos, 250)
+    #sensor_pos = {"loc":True, "line": 16}
+    pop = population(sensor_pos, 1000)
 
     starting_gen = input("Start from which existing generation? (return empty if no such generation exists):")
     if starting_gen == "":
