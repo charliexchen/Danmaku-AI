@@ -11,7 +11,7 @@ import math
 
 
 def f(env):
-    return env.eval_fitness(1000)
+    return env.eval_fitness(1500)
 
 class Timer():
     # This object tracks the timing
@@ -90,7 +90,7 @@ class population():
         print("Variance of fitness: {}".format(np.var([agent.fitness for agent in self.agents])))
         new_agents = []
         print(self.pop_size * (99 / 100))
-        for i in range(int(self.pop_size * (99 / 100)), self.pop_size):
+        for i in range(int(self.pop_size * (90 / 100)), self.pop_size):
             if (i + 1) / self.pop_size > np.random.uniform(0, 1.0):
                 new_agents.append(self.agents[i])
         self.agents = new_agents
@@ -113,15 +113,15 @@ class population():
         print("Saving generation {}".format(self.gen))
 
     def load_generation(self, filename):
-        print("saving gen {}".format(i))
-        pickle.dump(pop.agents, open("generation{}.p".format(i), "wb"))
-        print("saved gen {}".format(i))
+        if i%5==0:
+            print("saving gen {}".format(i))
+            pickle.dump(pop.agents, open("generation{}.p".format(i), "wb"))
+            print("saved gen {}".format(i))
 
 
 if __name__ == "__main__":
 
     save_path = "saved_nets"
-
     sensor_pos = {"point": [
         (0, -10, 1), (10, -10, 1), (-10, -10, 1), (-10, 0, 1), (10, 0, 1),
         (0, -20, 1), (20, -20, 1), (-20, -20, 1), (-20, 0, 1), (20, 0, 1),
