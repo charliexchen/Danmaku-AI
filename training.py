@@ -163,12 +163,14 @@ if __name__ == "__main__":
         pop.select()
         print("Surviving agents: {}".format(len(pop.agents)))
         pop.breed([rate[0] / ((1 + i)), rate[1] / ((1 + i))])
-        print("saving gen {}".format(i))
+        if i%5==0:
+            print("saving gen {}".format(i))
 
-        file_name = os.path.join(save_path, "generation{}.p".format(i))
+            file_name = os.path.join(save_path, "generation{}.p".format(i))
 
-        pickle.dump(pop.agents, open(file_name, "wb"))
-        print("saved gen {}".format(i))
+
+            pickle.dump(pop.agents, open(file_name, "wb"))
+            print("saved gen {}".format(i))
         if i % 5 == 0 and display:
             GUI.display_imported_generation(file_name, 3)
         # if i % 25 == 0 and i != 0:
