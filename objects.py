@@ -60,6 +60,17 @@ class bullet:
         return True
 
 
+class laser:
+    def __init__(self, pos, v, r=1):
+        self.rad = r
+        self.pos = pos
+        self.v = v
+        self.dir = angle((0, 0), v)
+
+    def update(self):
+        self.pos = [self.pos[i] + self.v[i] for i in range(2)]
+
+
 class point_sensor:
     def __init__(self, pos, relpos, rad):
         self.relpos = relpos
@@ -131,13 +142,16 @@ class line_sensor:
 
 class ship:
     def __init__(self, maxvel, initpos, rad, boundary,
-                 sensors={"point": [(0, -5)], "line": 8, "prox": 0, "pos": False}):
+                 sensors={"point": [(0, -5)], "line": 8, "prox": 0, "pos": False}, cooldown=10):
         self.sensors = sensors
         # sets cap on speed
         self.maxvel = maxvel
         # initialises position
         self.pos = initpos
         # pdb.set_trace()
+        self.max_cooldown = cooldown
+        self.cooldown = cooldown
+        self.Focus = False
 
         # determines the type of sensors
         if "point" in self.sensors:
@@ -153,6 +167,14 @@ class ship:
         self.rad = rad
 
     def move(self, vel):
+        #if self.focus:
+        #    self.cooldown -= 2
+        #    if not self.cooldown>0:
+        #        self.cooldown = self.max_cooldown
+        #else:
+        #    self.cooldown -= 1
+        #    if not self.cooldown>0:
+        #        self.cooldown = self.max_cooldown
         # moves plane by amount
         vel = [i * self.maxvel for i in vel]
         self.pos = [self.pos[i] + vel[i] for i in range(2)]

@@ -8,9 +8,12 @@ import pdb, cProfile
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
+DRED = (120, 0, 0)
 GREEN = (0, 255, 0)
+DGREEN = (0, 120, 0)
 BLUE = (0, 0, 255)
 CYAN = (0, 255, 255)
+MAGENTA = (255, 0, 255)
 DMAGENTA = (120, 0, 120)
 
 
@@ -28,11 +31,14 @@ class gui:
         trained_pop = pickle.load(open(filename, "rb"))
         # pdb.set_trace()
         print("Imported {}".format(filename))
-        fittest = max(trained_pop, key=lambda x: x.fitness)
-        print("Fitness of best performer: {}".format(fittest.fitness))
-        net = fittest.controller
 
-        sensors = fittest.fighter.sensors
+        fittest_value = max(trained_pop["fitness"])
+        fittest_index = trained_pop["fitness"].index(fittest_value)
+
+        fittest_net = trained_pop["nets"][fittest_index]
+        print("Fitness of best performer: {}".format(fittest_value))
+
+        sensors = trained_pop["sensor_type"]
         if "prox" in sensors:
             print("{} proxmimity sensors extracted".format(sensors["prox"]))
         if "loc" in sensors:
@@ -40,10 +46,10 @@ class gui:
         if "pixel" in sensors:
             print("Pixels sensors extracted")
 
-        self.display_net((sensors, net), loops, bullet_types)
+        self.display_net((sensors, fittest_net), loops, bullet_types)
 
     def display_net(self, hyperparams, loops=-1, bullet_types={"aimed:": 15, "random": 1, "spiral": 2},
-                    displaySensors=set(["line", "prox", "point"])):
+                    displaySensors=set(["point", "line", "prox"])):
 
         pygame.init()
 
@@ -75,16 +81,19 @@ class gui:
                                       math.cos(sensor.dir) * sensor.dist + env.fighter.pos[1]]
                         pygame.draw.line(screen, DMAGENTA, env.fighter.pos, detect_pos)
                 if "point" in env.fighter.sensors and "point" in displaySensors:
-                    activesensors = env.shipsensors()[16:]
+                    if "line" in env.fighter.sensors:
+                        activesensors = env.shipsensors()[env.fighter.sensors["line"]:]
+                    else:
+                        activesensors = env.shipsensors()
                     for i in range(len(env.fighter.point_sensors)):
                         if activesensors[i] == 0:
-                            pygame.draw.circle(screen, GREEN, dispos(env.fighter.point_sensors[i].pos), 1)
+                            pygame.draw.circle(screen, DGREEN, dispos(env.fighter.point_sensors[i].pos), 1)
                         else:
                             pygame.draw.circle(screen, RED, dispos(env.fighter.point_sensors[i].pos), 3)
 
                 if "prox" in env.fighter.sensors and "prox" in displaySensors:
                     for incoming in env.fighter.highlightedpos:
-                        pygame.draw.line(screen, RED, dispos(incoming), dispos(env.fighter.pos))
+                        pygame.draw.line(screen, DRED, dispos(incoming), dispos(env.fighter.pos))
                         if incoming[0] == 0:
                             pygame.draw.line(screen, RED, (1, 0), (1, self.boundary[1]))
                         elif incoming[0] == self.boundary[0]:
@@ -97,12 +106,19 @@ class gui:
                                              (self.boundary[0], self.boundary[1] - 1))
                         else:
                             pygame.draw.circle(screen, RED, dispos(incoming), 10, 1)
-                pygame.draw.circle(screen, CYAN, dispos(env.fighter.pos), env.fighter.rad+1)
+                p1 = dispos(env.fighter.pos)[0]
+                p2 = dispos(env.fighter.pos)[1]
+                pygame.draw.polygon(screen, WHITE, [[p1, p2 - 4], [p1 + 2, p2 + 3], [p1 - 2, p2 + 3]])
+                pygame.draw.circle(screen, CYAN, dispos(env.fighter.pos), env.fighter.rad + 1)
 
             else:
-                pygame.draw.circle(screen, CYAN, dispos(env.fighter.pos), env.fighter.rad + 2)
+                p1 = dispos(env.fighter.pos)[0]
+                p2 = dispos(env.fighter.pos)[1]
+                pygame.draw.polygon(screen, WHITE, [[p1, p2 - 5], [p1 + 3, p2 + 4], [p1 - 3, p2 + 4]])
+                pygame.draw.circle(screen, CYAN, dispos(env.fighter.pos), env.fighter.rad)
+
             pygame.display.flip()
-            clock.tick(24)
+            clock.tick(30)
         pygame.quit()
 
 
@@ -129,8 +145,7 @@ if __name__ == "__main__":
     # env = environ((8, net))
     # print("Profiling fitness evaluation times")
     # cProfile.run('env.eval_fitness(500)')
-
     GUI = gui()
     hyperparams = (sensors, net)
-    GUI.display_imported_generation("generation53.p", bullet_types={ "spiral": 1,"aimed": 30, "random":5})
+    GUI.display_imported_generation("saved_nets/AllSensors290.p", bullet_types={"spiral": 1, "random": 1})
     # GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})

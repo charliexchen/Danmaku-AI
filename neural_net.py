@@ -140,7 +140,7 @@ def LSTM():
             for i in range(4):
                 assert net[i].input_size == input_size + latent_size
                 assert nets[i].output_size == latent_size
-                if i!=2:
+                if i != 2:
                     assert nets[i].layers[-1].activation == sigmoid
                 else:
                     assert nets[i].layers[-1].activation == tanh
@@ -151,10 +151,10 @@ def LSTM():
     def activate(self, input):
         concat_input = input + self.latent1
         concat_output = [net.activate(concat_input) for net in self.nets[:3]]
-        scale1 = [self.latent2[i]* concat_output[0][i] for i in range(self.latent_size)]
-        scale2 = [concat_output[2][i]* concat_output[1][i] for i in range(self.latent_size)]
+        scale1 = [self.latent2[i] * concat_output[0][i] for i in range(self.latent_size)]
+        scale2 = [concat_output[2][i] * concat_output[1][i] for i in range(self.latent_size)]
         self.latent2 = [tanh(scale1[i] + scale2[i]) for i in range(self.latent_size)]
-        output = [self.latent2[i]*concat_output[3] for i in range(self.latent_size)]
+        output = [self.latent2[i] * concat_output[3] for i in range(self.latent_size)]
         self.latent1 = output
 
         return self.nets[4].activate(output)

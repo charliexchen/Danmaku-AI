@@ -13,6 +13,7 @@ import math
 def f(env):
     return env.eval_fitness(1500)
 
+
 class Timer():
     # This object tracks the timing
     def __init__(self):
@@ -36,6 +37,8 @@ class Timer():
     def elapsed_time(self, text="Time Elapsed"):
         print(text + ": {}".format(self.elapsed(time.time() - self.start_time)))
 
+class Logger():
+    self.fitness = log()
 class population():
     def __init__(self, sensors, pop_size=100, multithread=False, procs=cpu_count()):
         # initialise the population of agents
@@ -113,14 +116,13 @@ class population():
         print("Saving generation {}".format(self.gen))
 
     def load_generation(self, filename):
-        if i%5==0:
+        if i % 5 == 0:
             print("saving gen {}".format(i))
             pickle.dump(pop.agents, open("generation{}.p".format(i), "wb"))
             print("saved gen {}".format(i))
 
 
 if __name__ == "__main__":
-
     save_path = "saved_nets"
     sensor_pos = {"point": [
         (0, -10, 1), (10, -10, 1), (-10, -10, 1), (-10, 0, 1), (10, 0, 1),
@@ -130,7 +132,7 @@ if __name__ == "__main__":
         (0, 15, 1), (10, -30, 1), (-10, -30, 1), (0, -3, 1), (3, 0, 1), (-3, 0, 1)],
         "prox": 3, "loc": True, "line": 16}
 
-    #sensor_pos = {"loc":True, "line": 16}
+    # sensor_pos = {"loc":True, "line": 16}
     pop = population(sensor_pos, 1000)
 
     starting_gen = input("Start from which existing generation? (return empty if no such generation exists):")
@@ -163,11 +165,10 @@ if __name__ == "__main__":
         pop.select()
         print("Surviving agents: {}".format(len(pop.agents)))
         pop.breed([rate[0] / ((1 + i)), rate[1] / ((1 + i))])
-        if i%5==0:
+        if i % 5 == 0:
             print("saving gen {}".format(i))
 
             file_name = os.path.join(save_path, "generation{}.p".format(i))
-
 
             pickle.dump(pop.agents, open(file_name, "wb"))
             print("saved gen {}".format(i))
