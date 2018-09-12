@@ -2,6 +2,7 @@ import pygame
 import pickle, math
 from objects import environ, angle
 from neural_net import dense_net, relu, sigmoid, tanh, make_focused
+from training import Timer
 import pdb, cProfile
 
 # Colors
@@ -44,13 +45,16 @@ class gui:
             print("{} proximity sensors extracted".format(sensors["prox"]))
         if "loc" in sensors:
             print("Location sensors extracted")
-        if "pixel" in sensors:
+        if "point" in sensors:
             print("Pixels sensors extracted")
+        if "line" in sensors:
+            print("{} ray sensors extracted".format(sensors["line"]))
 
         self.display_net((sensors, fittest_net), loops, bullet_types)
 
     def display_net(self, hyperparams, loops=-1, bullet_types={"aimed:": 15, "random": 1, "spiral": 1},
                     displaySensors=set(["point", "line", "prox"])):
+
 
         pygame.init()
 
@@ -65,12 +69,15 @@ class gui:
 
         # We need to display the ship one frame behind, since it moves after the sensors are activated
         prev_pos = [0, 0]
+        timer = Timer()
         while not done:
 
             if loops == env.deaths:
                 done = True
             if env.update():
                 print("Hit after dealing {} damage".format(env.damage))
+                timer.elapsed_time()
+                timer.reset()
                 env.reset()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:  # If user clicked close
@@ -132,7 +139,7 @@ class gui:
             screen.blit(label, env.spawn)
 
             pygame.display.flip()
-            clock.tick(45)
+            clock.tick(30)
 
 
 if __name__ == "__main__":
@@ -160,5 +167,5 @@ if __name__ == "__main__":
     # cProfile.run('env.eval_fitness(500)')
     GUI = gui()
     hyperparams = (sensors, net)
-    GUI.display_imported_generation("saved_nets/generation290.p", bullet_types={ "spiral": 1, "random": 1})
+    GUI.display_imported_generation("saved_nets/generation290.p", bullet_types={"spiral": 1, "random": 1})
     # GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})
