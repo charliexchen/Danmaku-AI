@@ -170,8 +170,8 @@ class ship:
         self.cooldown = cooldown
         self.focusing = focusing
         if focusing:
-            self.focus = True
-            self.foc_vel = maxvel / 2
+            self.focus = False
+            self.foc_vel = maxvel
         self.env = env
 
         # determines the type of sensors
