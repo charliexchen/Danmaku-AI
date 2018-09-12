@@ -417,5 +417,7 @@ class environ:
         for i in range(maxtime):
             # Rewards the agent for damage dealt to enemy ship
             if self.update():
+                print(self.damage)
                 return self.damage
+        print(self.damage)
         return self.damage

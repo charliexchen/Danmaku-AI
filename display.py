@@ -15,6 +15,7 @@ BLUE = (0, 0, 255)
 CYAN = (0, 255, 255)
 MAGENTA = (255, 0, 255)
 DMAGENTA = (120, 0, 120)
+YELLOW = (255, 255, 0)
 
 
 # function for rounding floats for display
@@ -65,6 +66,7 @@ class gui:
         # We need to display the ship one frame behind, since it moves after the sensors are activated
         prev_pos = [0, 0]
         while not done:
+
             if loops == env.deaths:
                 done = True
             if env.update():
@@ -122,9 +124,15 @@ class gui:
                 pygame.draw.circle(screen, CYAN, dispos(prev_pos), env.fighter.rad)
             pygame.draw.circle(screen, DRED, dispos(env.spawn), 30)
             prev_pos = env.fighter.pos
+
+            myfont = pygame.font.SysFont("monospace", 15)
+
+            # render text
+            label = myfont.render(str(env.damage), 1, YELLOW)
+            screen.blit(label, env.spawn)
+
             pygame.display.flip()
             clock.tick(45)
-        pygame.quit()
 
 
 if __name__ == "__main__":
@@ -152,5 +160,5 @@ if __name__ == "__main__":
     # cProfile.run('env.eval_fitness(500)')
     GUI = gui()
     hyperparams = (sensors, net)
-    GUI.display_imported_generation("saved_nets/generation290.p", bullet_types={"spiral": 1, "random": 1})
+    GUI.display_imported_generation("saved_nets/generation290.p", bullet_types={"aimed": 30, "spiral": 1, "random": 1})
     # GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})

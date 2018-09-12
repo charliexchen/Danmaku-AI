@@ -11,7 +11,7 @@ import math
 
 
 def f(env):
-    return env.eval_dmg(100)
+    return env.eval_dmg(1200)
 
 
 class Timer():
