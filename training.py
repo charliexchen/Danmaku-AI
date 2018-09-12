@@ -11,7 +11,7 @@ import math
 
 
 def f(env):
-    return env.eval_fitness(1500)
+    return env.eval_dmg(1200)
 
 
 class Timer():
@@ -38,7 +38,7 @@ class Timer():
         print(text + ": {}".format(self.elapsed(time.time() - self.start_time)))
 
 class Logger():
-    self.fitness = log()
+    pass
 class population():
     def __init__(self, sensors, pop_size=100, multithread=False, procs=cpu_count()):
         # initialise the population of agents
@@ -54,7 +54,7 @@ class population():
             input_len += sensors["line"]
         for i in range(pop_size):
             self.agents.append(environ((sensors, dense_net(input_len, 64, relu, recursive=True, rec_size=16)),
-                                       bullet_types={"aimed": 15, "spiral": 1, "random": 1}))
+                                       bullet_types={"aimed": 1, "spiral": 1, "random": 1}))
             # Neat(25, 2, tanh)
             self.agents[-1].controller.add_layer(64, relu)
             self.agents[-1].controller.add_layer(32, relu)
@@ -146,8 +146,10 @@ if __name__ == "__main__":
 
     if starting_gen > -1:
         file_name = os.path.join(save_path, "generation{}.p".format(starting_gen))
-        trained_pop = pickle.load(open(file_name, "rb"))
-        pop.agents = trained_pop
+        trained_nets = pickle.load(open(file_name, "rb"))
+        for i in range(len(pop.agents)):
+            pop.agents[i].controller=trained_nets["nets"][i]
+
 
     rate = [0.25, 0.2]
 

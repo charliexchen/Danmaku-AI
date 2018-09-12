@@ -61,14 +61,17 @@ class bullet:
 
 
 class laser:
-    def __init__(self, pos, v, r=1):
+    def __init__(self, pos, v, r=5):
         self.rad = r
         self.pos = pos
         self.v = v
         self.dir = angle((0, 0), v)
 
-    def update(self):
+    def update(self, boundary):
         self.pos = [self.pos[i] + self.v[i] for i in range(2)]
+        if outofbound(self.pos, boundary, self.rad):
+            return False
+        return True
 
 
 class point_sensor:
@@ -82,7 +85,7 @@ class point_sensor:
         self.pos = tuple(sum(t) for t in zip(self.relpos, pos))
         # work out absolute position
         if outofbound(self.pos, boundary):
-            self.on =1
+            self.on = 1
             return self.on
             # return 1 if outside the bounding box
         else:
@@ -145,17 +148,31 @@ class line_sensor:
 
 
 class ship:
-    def __init__(self, maxvel, initpos, rad, boundary,
-                 sensors={"point": [(0, -5)], "line": 8, "prox": 0, "pos": False}, cooldown=10):
+    def __init__(self, maxvel, initpos, rad, boundary, env,
+                 sensors={"point": [(0, -5)], "line": 8, "prox": 0, "pos": False}, cooldown=6, focusing=True):
         self.sensors = sensors
+        self.input_len=0
+        if "point" in sensors:
+            self.input_len += len(sensors["point"])
+        if "prox" in sensors:
+            self.input_len += 2 * sensors["prox"]
+        if "loc" in sensors:
+            self.input_len += 2
+        if "line" in sensors:
+            self.input_len += sensors["line"]
         # sets cap on speed
-        self.maxvel = maxvel
+        self.max_vel = maxvel
+
         # initialises position
         self.pos = initpos
         # pdb.set_trace()
         self.max_cooldown = cooldown
         self.cooldown = cooldown
-        self.Focus = False
+        self.focusing = focusing
+        if focusing:
+            self.focus = True
+            self.foc_vel = maxvel / 2
+        self.env = env
 
         # determines the type of sensors
         if "point" in self.sensors:
@@ -170,18 +187,35 @@ class ship:
         # size of hitbox
         self.rad = rad
 
-    def move(self, vel):
-        #if self.focus:
-        #    self.cooldown -= 2
-        #    if not self.cooldown>0:
-        #        self.cooldown = self.max_cooldown
-        #else:
-        #    self.cooldown -= 1
-        #    if not self.cooldown>0:
-        #        self.cooldown = self.max_cooldown
-        # moves plane by amount
-        vel = [i * self.maxvel for i in vel]
-        self.pos = [self.pos[i] + vel[i] for i in range(2)]
+    def move(self, input):
+        if self.focusing:
+            if input[2]>0.5:
+                self.focus = True
+            else:
+                self.focus = False
+            if self.focus:
+                self.cooldown -= 3
+                if not self.cooldown > 0:
+                    self.cooldown = self.max_cooldown
+                    self.env.spawn_laser(self.pos, self.focus)
+            else:
+                self.cooldown -= 1
+                if not self.cooldown > 0:
+                    self.cooldown = self.max_cooldown
+                    self.env.spawn_laser(self.pos, self.focus)
+            move = [i * self.max_vel for i in input[:2]]
+
+            if self.focus:
+                move = [v if v < self.foc_vel else self.foc_vel for v in input]
+                move = [v if v > -self.foc_vel else -self.foc_vel for v in move]
+            self.pos = [self.pos[i] + move[i] for i in range(2)]
+        else:
+            self.cooldown -= 1
+            if not self.cooldown > 0:
+                self.cooldown = self.max_cooldown
+                self.env.spawn_laser(self.pos, False)
+            input = [i * self.max_vel for i in input]
+            self.pos = [self.pos[i] + input[i] for i in range(2)]
 
     def sense(self, bullets, boundary):
         # returns an array contains the information from the sensors
@@ -202,16 +236,18 @@ class ship:
 
 class environ:
     def __init__(self, hyperparams, boundary=[200, 200], bullet_cap=100, shipinit=[100, 100],
-                 spawn=[100, 10], bullet_types={"aimed": 15, "spiral": 1, "random": 1}):
+                 enemy_spawn=[100, 10], bullet_types={"aimed": 15, "spiral": 1, "random": 1}):
         # some parameters for the environment
         self.boundary = boundary
         self.bullet_cap = bullet_cap
-        self.spawn = spawn
+        self.spawn = enemy_spawn
+        self.spawn_speed = 1
+        self.damage = 0
 
         # This is the hyperparameters for the environment -- the sensor values of ths ship and the neural network behind it
         self.sensors, self.controller = hyperparams
         # Initialise the ship
-        self.fighter = ship(8, shipinit, 1, boundary, self.sensors)
+        self.fighter = ship(8, shipinit, 1, boundary, self, self.sensors)
         self.shipinit = shipinit
 
         # These dictinaries wstore the cooldowns for each bullet spawner
@@ -226,11 +262,16 @@ class environ:
         # Some values of the environment for reference
         self.fitness = 0
         self.deaths = 0
-        self.move_dir=[0,0]
+        self.move_dir = [0, 0]
+
+        self.lasers = []
+
     def reset(self):
         # rests the state of the environment
         # clear the bullets
         self.bullets = []
+        self.lasers = []
+        self.damage = 0
         # reset ship position
         self.fighter.pos = self.shipinit
 
@@ -269,19 +310,44 @@ class environ:
                         v = [spd * np.sin(angle), spd * np.cos(angle)]
                         self.bullets.append(bullet(v, self.spawn, 6))
 
+    def spawn_laser(self, pos, focused=True):
+        unfoc_patter = [[[0, -5], [0, -10]], [[0, -5], [2, -9]], [[0, -5], [-2, -9]], [[0, -5], [4, -8]],
+                        [[0, -5], [-4, -8]]]
+        foc_patter = [[[5, -5], [0, -15]], [[-5, -5], [0, -15]], [[-5, -5], [2, -15]], [[5, -5], [-2, -15]]]
+        if focused:
+            for shot in foc_patter:
+                self.lasers.append(laser([shot[0][i] + pos[i] for i in range(2)], shot[1]))
+        else:
+            for shot in unfoc_patter:
+                self.lasers.append(laser([shot[0][i] + pos[i] for i in range(2)], shot[1]))
+
     def update(self):
 
+        self.spawn[0] += self.spawn_speed
+        if self.spawn[0] > 170:
+            self.spawn_speed = -1
+        if self.spawn[0] < 30:
+            self.spawn_speed = 1
         # One step in the process, returns True if the ship dies
         # Spawn bullets
         self.spawn_bullets()
 
-
         # Move the Bullets
-        newbullets = []
+        new_bullets = []
         for i in range(len(self.bullets)):
             if self.bullets[i].update(self.boundary):
-                newbullets.append(self.bullets[i])
-        self.bullets = newbullets
+                new_bullets.append(self.bullets[i])
+        self.bullets = new_bullets
+
+        # Move the lasers
+        new_lasers = []
+        for i in range(len(self.lasers)):
+            if self.lasers[i].update(self.boundary):
+                if col(self.lasers[i].pos, self.spawn, 20, self.lasers[i].rad):
+                    self.damage += 1
+                else:
+                    new_lasers.append(self.lasers[i])
+        self.lasers = new_lasers
 
         # Move the ship according to sensor data
         self.fighter.move(self.controller.activate(self.shipsensors()))
@@ -327,6 +393,8 @@ class environ:
 
         if "loc" in self.fighter.sensors:
             output += [(self.fighter.pos[i] / self.boundary[i]) - 0.5 for i in range(2)]
+        if self.fighter.focusing:
+            output += [(self.spawn[i] / self.boundary[i]) - 0.5 for i in range(2)]
         return output
 
     def eval_fitness(self, maxtime):
@@ -342,3 +410,12 @@ class environ:
                 return fitness
         self.fitness = fitness
         return fitness
+
+    def eval_dmg(self, maxtime):
+        # Runs an episode where the environment spawns bullets until the ship is hit
+        self.reset()
+        for i in range(maxtime):
+            # Rewards the agent for damage dealt to enemy ship
+            if self.update():
+                return self.damage
+        return self.damage
