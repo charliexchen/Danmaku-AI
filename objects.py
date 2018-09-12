@@ -222,7 +222,7 @@ class environ:
         # Some values of the environment for reference
         self.fitness = 0
         self.deaths = 0
-
+        self.move_dir=[0,0]
     def reset(self):
         # rests the state of the environment
         # clear the bullets
@@ -270,6 +270,7 @@ class environ:
         # One step in the process, returns True if the ship dies
         # Spawn bullets
         self.spawn_bullets()
+
 
         # Move the Bullets
         newbullets = []

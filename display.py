@@ -65,6 +65,7 @@ class gui:
             if loops == env.deaths:
                 done = True
             if env.update():
+                print("Hit!")
                 env.reset()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:  # If user clicked close
@@ -72,19 +73,20 @@ class gui:
             screen.fill(BLACK)
             for bullet in env.bullets:
                 pygame.draw.circle(screen, WHITE, dispos(bullet.pos), bullet.rad)
-
+            #update the sensors again, since we move the plane after the sensors are updated
+            sensor_vals = env.shipsensors()
             if displaySensors:
-
                 if "line" in env.fighter.sensors and "line" in displaySensors:
+                    env.shipsensors()
                     for sensor in env.fighter.line_sensors:
                         detect_pos = [math.sin(sensor.dir) * sensor.dist + env.fighter.pos[0],
                                       math.cos(sensor.dir) * sensor.dist + env.fighter.pos[1]]
                         pygame.draw.line(screen, DMAGENTA, env.fighter.pos, detect_pos)
                 if "point" in env.fighter.sensors and "point" in displaySensors:
                     if "line" in env.fighter.sensors:
-                        activesensors = env.shipsensors()[env.fighter.sensors["line"]:]
+                        activesensors =sensor_vals[env.fighter.sensors["line"]:]
                     else:
-                        activesensors = env.shipsensors()
+                        activesensors = sensor_vals
                     for i in range(len(env.fighter.point_sensors)):
                         if activesensors[i] == 0:
                             pygame.draw.circle(screen, DGREEN, dispos(env.fighter.point_sensors[i].pos), 1)
@@ -118,7 +120,7 @@ class gui:
                 pygame.draw.circle(screen, CYAN, dispos(env.fighter.pos), env.fighter.rad)
 
             pygame.display.flip()
-            clock.tick(30)
+            clock.tick(45)
         pygame.quit()
 
 
@@ -147,5 +149,5 @@ if __name__ == "__main__":
     # cProfile.run('env.eval_fitness(500)')
     GUI = gui()
     hyperparams = (sensors, net)
-    GUI.display_imported_generation("saved_nets/AllSensors290.p", bullet_types={"spiral": 1, "random": 1})
+    GUI.display_imported_generation("saved_nets/AllSensors290.p", bullet_types={"spiral": 1, "random": 1, "aimed":20})
     # GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})
