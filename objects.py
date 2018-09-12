@@ -170,7 +170,7 @@ class ship:
         self.cooldown = cooldown
         self.focusing = focusing
         if focusing:
-            self.focus = True
+            self.focus = False
             self.foc_vel = maxvel / 2
         self.env = env
 

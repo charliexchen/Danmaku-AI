@@ -11,7 +11,7 @@ import math
 
 
 def f(env):
-    return env.eval_dmg(1200)
+    return env.eval_fitness(100)
 
 
 class Timer():
@@ -54,7 +54,7 @@ class population():
             input_len += sensors["line"]
         for i in range(pop_size):
             self.agents.append(environ((sensors, dense_net(input_len, 64, relu, recursive=True, rec_size=16)),
-                                       bullet_types={"aimed": 1, "spiral": 1, "random": 1}))
+                                       bullet_types={"aimed": 15, "spiral": 1, "random": 1}))
             # Neat(25, 2, tanh)
             self.agents[-1].controller.add_layer(64, relu)
             self.agents[-1].controller.add_layer(32, relu)
@@ -69,7 +69,7 @@ class population():
         print("Training with {} processes".format(procs))
         self.pool = Pool(processes=procs)
 
-    def find_fitness(self, max_time):
+    def find_fitness(self):
         self.training_timer.reset()
 
         # wrapper for function in order to make use of multiprocessing
@@ -162,7 +162,7 @@ if __name__ == "__main__":
 
     for i in range(starting_gen + 1, 10000):
         print("Evaluating fitness...")
-        pop.find_fitness(1000)
+        pop.find_fitness()
         print("Selecting fittest")
         pop.select()
         print("Surviving agents: {}".format(len(pop.agents)))
