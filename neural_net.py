@@ -173,6 +173,7 @@ def make_focused(net, sensor_len):
     net.layers[-1].weights=np.insert(net.layers[-1].weights, output_size, 0.0, axis=0)
     return net
 
+
 if __name__ == "__main__":
     net = dense_net(3, 10, tanh)
     print(net.layers[0].weights)

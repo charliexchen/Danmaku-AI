@@ -160,7 +160,6 @@ class ship:
             self.input_len += 2
         if "line" in sensors:
             self.input_len += sensors["line"]
-        print(self.input_len)
         # sets cap on speed
         self.max_vel = maxvel
 

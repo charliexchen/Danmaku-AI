@@ -35,12 +35,12 @@ class gui:
         fittest_value = max(trained_pop["fitness"])
         fittest_index = trained_pop["fitness"].index(fittest_value)
 
-        fittest_net = make_focused(trained_pop["nets"][fittest_index], 47)
+        fittest_net = trained_pop["nets"][fittest_index]
         print("Fitness of best performer: {}".format(fittest_value))
 
         sensors = trained_pop["sensor_type"]
         if "prox" in sensors:
-            print("{} proxmimity sensors extracted".format(sensors["prox"]))
+            print("{} proximity sensors extracted".format(sensors["prox"]))
         if "loc" in sensors:
             print("Location sensors extracted")
         if "pixel" in sensors:
@@ -48,7 +48,7 @@ class gui:
 
         self.display_net((sensors, fittest_net), loops, bullet_types)
 
-    def display_net(self, hyperparams, loops=-1, bullet_types={"aimed:": 15, "random": 1, "spiral": 2},
+    def display_net(self, hyperparams, loops=-1, bullet_types={"aimed:": 15, "random": 1, "spiral": 1},
                     displaySensors=set(["point", "line", "prox"])):
 
         pygame.init()
@@ -152,5 +152,5 @@ if __name__ == "__main__":
     # cProfile.run('env.eval_fitness(500)')
     GUI = gui()
     hyperparams = (sensors, net)
-    GUI.display_imported_generation("saved_nets/AllSensors290.p", bullet_types={"spiral": 1, "random": 1})
+    GUI.display_imported_generation("saved_nets/generation290.p", bullet_types={"spiral": 1, "random": 1})
     # GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})
