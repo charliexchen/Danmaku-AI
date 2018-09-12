@@ -14,16 +14,33 @@ def extract_nets(imported_pop):
 
 
 if __name__ == "__main__":
-    dir = "./saved_nets/generation285.p"
+    dir = "saved_nets"
+    files_names = os.listdir(dir)
+    fitness_data = {}
+    for file_name in files_names:
+        pop_path = os.path.join(dir, file_name)
+        imported_pop = pickle.load(open(pop_path, "rb"))
+        try:
+            fitness=[]
+            for env in imported_pop:
+                fitness.append(env.fitness)
+            fitness_data[file_name] = fitness
+        except:
+            print("{} not extracted".format(file_name))
+    pickle.dump(fitness_data, open("fitness_data.p", "wb"))
+    '''
+    dir = ".\saved_nets\generation290.p"
     imported_pop = pickle.load(open(dir, "rb"))
-    if type(imported_pop)==list or not imported_pop["focus"]:
+    if not imported_pop["focus"]:
         imported_pop["focus"] = True
         for net in imported_pop["nets"]:
             neural_net.make_focused(net, 47)
-        pickle.dump(imported_pop, open("./saved_nets/generation285.p", "wb"))
+        pickle.dump(imported_pop, open(".\saved_nets\generation290.p", "wb"))
         print("Converted generation290.p")
     else:
         print("Generation already converted")
+        
+    '''
     '''
     dir =".\saved_nets"
     files_names = os.listdir(dir)
