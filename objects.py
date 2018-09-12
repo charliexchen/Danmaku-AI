@@ -274,6 +274,7 @@ class environ:
         self.damage = 0
         # reset ship position
         self.fighter.pos = self.shipinit
+        self.controller.previous = [0 for i in self.controller.previous]
 
     def spawn_bullets(self):
         # This function is responsible for spawning the danmaku patterns

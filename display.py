@@ -160,5 +160,5 @@ if __name__ == "__main__":
     # cProfile.run('env.eval_fitness(500)')
     GUI = gui()
     hyperparams = (sensors, net)
-    GUI.display_imported_generation("saved_nets/generation290.p", bullet_types={"aimed": 30, "spiral": 1, "random": 1})
+    GUI.display_imported_generation("saved_nets/generation290.p", bullet_types={ "spiral": 1, "random": 1})
     # GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})
