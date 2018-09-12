@@ -105,7 +105,7 @@ class dense_net():
         else:
             assert (len(self.layers) == len(rate))
             for i in range(len(self.layers)):
-                layer.mutate(rate[i])
+                self.layers[i].mutate(rate[i])
 
     def reset_rec(self, ):
         try:
@@ -119,9 +119,9 @@ class dense_net():
             for layer in self.layers:
                 layer.reset(rate)
         else:
-            assert (len(layers) == len(rate))
+            assert (len(self.layers) == len(rate))
             for i in range(len(self.layers)):
-                layer.reset(rate[i])
+                self.layers[i].reset(rate[i])
 
 
 def LSTM():
@@ -163,6 +163,15 @@ def LSTM():
         for net in self.nets:
             net.mutate(rate)
 
+def make_focused(net, sensor_len):
+    net.input_size+=2
+    net.layers[0].input_size+=2
+    net.layers[0].weights=np.insert(net.layers[0].weights, sensor_len+1,0.0, axis=1)
+    net.layers[0].weights=np.insert(net.layers[0].weights, sensor_len+1,0.0, axis=1)
+    output_size = net.layers[-1].output_size-net.rec_size
+    net.layers[-1].output_size += 1
+    net.layers[-1].weights=np.insert(net.layers[-1].weights, output_size, 0.0, axis=0)
+    return net
 
 if __name__ == "__main__":
     net = dense_net(3, 10, tanh)

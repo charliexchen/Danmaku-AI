@@ -1,7 +1,7 @@
 import pygame
 import pickle, math
 from objects import environ, angle
-from neural_net import dense_net, relu, sigmoid, tanh
+from neural_net import dense_net, relu, sigmoid, tanh, make_focused
 import pdb, cProfile
 
 # Colors
@@ -35,7 +35,7 @@ class gui:
         fittest_value = max(trained_pop["fitness"])
         fittest_index = trained_pop["fitness"].index(fittest_value)
 
-        fittest_net = trained_pop["nets"][fittest_index]
+        fittest_net = make_focused(trained_pop["nets"][fittest_index], 47)
         print("Fitness of best performer: {}".format(fittest_value))
 
         sensors = trained_pop["sensor_type"]
@@ -62,13 +62,13 @@ class gui:
         done = False
         env = environ(hyperparams, self.boundary, 100, [100, 100], [100, 10], bullet_types)
 
-        #We need to display the ship one frame behind, since it moves after the sensors are activated
-        prev_pos =[0,0]
+        # We need to display the ship one frame behind, since it moves after the sensors are activated
+        prev_pos = [0, 0]
         while not done:
             if loops == env.deaths:
                 done = True
             if env.update():
-                print("Hit!")
+                print("Hit after dealing {} damage".format(env.damage))
                 env.reset()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:  # If user clicked close
@@ -76,13 +76,18 @@ class gui:
             screen.fill(BLACK)
             for bullet in env.bullets:
                 pygame.draw.circle(screen, WHITE, dispos(bullet.pos), bullet.rad)
-            #update the sensors again, since we move the plane after the sensors are updated
+            for laser in env.lasers:
+                dir = angle([0, 0], laser.v)
+                s_pos = [math.sin(dir) * 8 + laser.pos[0], math.cos(dir) * 8 + laser.pos[1]]
+                e_pos = [math.sin(dir) * -8 + laser.pos[0], math.cos(dir) * -8 + laser.pos[1]]
+                pygame.draw.line(screen, WHITE, s_pos, e_pos)
+            # update the sensors again, since we move the plane after the sensors are updated
             if displaySensors:
                 if "line" in env.fighter.sensors and "line" in displaySensors:
                     for sensor in env.fighter.line_sensors:
-                        detect_pos = [math.sin(sensor.dir) * sensor.dist + env.fighter.pos[0],
-                                      math.cos(sensor.dir) * sensor.dist + env.fighter.pos[1]]
-                        pygame.draw.line(screen, DMAGENTA, env.fighter.pos, detect_pos)
+                        detect_pos = [math.sin(sensor.dir) * sensor.dist + prev_pos[0],
+                                      math.cos(sensor.dir) * sensor.dist + prev_pos[1]]
+                        pygame.draw.line(screen, DMAGENTA, prev_pos, detect_pos)
                 if "point" in env.fighter.sensors and "point" in displaySensors:
                     for sensor in env.fighter.point_sensors:
                         if sensor.on:
@@ -92,7 +97,7 @@ class gui:
 
                 if "prox" in env.fighter.sensors and "prox" in displaySensors:
                     for incoming in env.fighter.highlightedpos:
-                        pygame.draw.line(screen, DRED, dispos(incoming), dispos(env.fighter.pos))
+                        pygame.draw.line(screen, DRED, dispos(incoming), dispos(prev_pos))
                         if incoming[0] == 0:
                             pygame.draw.line(screen, RED, (1, 0), (1, self.boundary[1]))
                         elif incoming[0] == self.boundary[0]:
@@ -115,9 +120,10 @@ class gui:
                 p2 = dispos(prev_pos)[1]
                 pygame.draw.polygon(screen, WHITE, [[p1, p2 - 5], [p1 + 3, p2 + 4], [p1 - 3, p2 + 4]])
                 pygame.draw.circle(screen, CYAN, dispos(prev_pos), env.fighter.rad)
+            pygame.draw.circle(screen, DRED, dispos(env.spawn), 30)
             prev_pos = env.fighter.pos
             pygame.display.flip()
-            clock.tick(60)
+            clock.tick(45)
         pygame.quit()
 
 

@@ -14,6 +14,7 @@ def extract_nets(imported_pop):
 
 
 
+
 if __name__ == "__main__":
     dir =".\saved_nets"
     files_names = os.listdir(dir)

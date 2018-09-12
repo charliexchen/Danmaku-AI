@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3021a6a4-fe49-4457-bc0f-074b26c11d2a" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/display.py" afterPath="$PROJECT_DIR$/display.py" />
+      <change beforePath="$PROJECT_DIR$/extract_nets.py" afterPath="$PROJECT_DIR$/extract_nets.py" />
+      <change beforePath="$PROJECT_DIR$/neural_net.py" afterPath="$PROJECT_DIR$/neural_net.py" />
       <change beforePath="$PROJECT_DIR$/objects.py" afterPath="$PROJECT_DIR$/objects.py" />
+      <change beforePath="$PROJECT_DIR$/training.py" afterPath="$PROJECT_DIR$/training.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,70 +24,49 @@
       <file leaf-file-name="objects.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/objects.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-478">
-              <caret line="73" column="19" lean-forward="false" selection-start-line="73" selection-start-column="19" selection-end-line="73" selection-end-column="19" />
+            <state relative-caret-position="611">
+              <caret line="161" column="45" lean-forward="false" selection-start-line="161" selection-start-column="45" selection-end-line="161" selection-end-column="45" />
               <folding>
                 <element signature="e#103#186#0" expanded="false" />
                 <element signature="e#211#243#0" expanded="false" />
                 <element signature="e#267#487#0" expanded="false" />
-                <element signature="e#513#584#0" expanded="false" />
                 <element signature="e#616#654#0" expanded="false" />
                 <element signature="e#684#829#0" expanded="false" />
                 <element signature="e#874#1005#0" expanded="false" />
-                <element signature="e#1026#1376#0" expanded="false" />
-                <element signature="e#1396#1613#0" expanded="false" />
-                <element signature="e#1640#2445#0" expanded="false" />
-                <element signature="e#2361#2445#0" expanded="false" />
-                <element signature="e#2471#4410#0" expanded="false" />
-                <element signature="e#2897#3109#0" expanded="false" />
-                <element signature="e#3158#3355#0" expanded="false" />
-                <element signature="e#7597#7758#0" expanded="false" />
-                <element signature="e#7797#9517#0" expanded="false" />
-                <element signature="e#10525#12154#0" expanded="false" />
-                <element signature="e#12201#12720#0" expanded="false" />
+                <element signature="e#1748#2554#0" expanded="false" />
+                <element signature="e#2470#2554#0" expanded="false" />
+                <element signature="e#2580#4519#0" expanded="false" />
+                <element signature="e#3006#3218#0" expanded="false" />
+                <element signature="e#3267#3464#0" expanded="false" />
+                <element signature="e#7277#7677#0" expanded="false" />
+                <element signature="e#9329#11049#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="extract_nets.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/extract_nets.py">
+      <file leaf-file-name="training.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/training.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="710">
-              <caret line="28" column="20" lean-forward="false" selection-start-line="28" selection-start-column="20" selection-end-line="30" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="neat_wrapper.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/neat_wrapper.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-16">
-              <caret line="13" column="71" lean-forward="true" selection-start-line="13" selection-start-column="71" selection-end-line="13" selection-end-column="71" />
+            <state relative-caret-position="2393">
+              <caret line="133" column="0" lean-forward="false" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
               <folding>
-                <element signature="e#82#93#0" expanded="true" />
+                <element signature="e#2816#3579#0" expanded="false" />
+                <element signature="e#3616#3972#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Neat.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Neat.py">
+      <file leaf-file-name="neural_net.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/neural_net.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-610">
-              <caret line="203" column="16" lean-forward="false" selection-start-line="203" selection-start-column="16" selection-end-line="203" selection-end-column="16" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="config-feedforward" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config-feedforward">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1617">
-              <caret line="49" column="28" lean-forward="false" selection-start-line="49" selection-start-column="28" selection-end-line="49" selection-end-column="28" />
-              <folding />
+            <state relative-caret-position="83">
+              <caret line="165" column="34" lean-forward="false" selection-start-line="165" selection-start-column="34" selection-end-line="165" selection-end-column="34" />
+              <folding>
+                <element signature="e#52#79#0" expanded="false" />
+                <element signature="e#110#171#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -91,21 +74,12 @@
       <file leaf-file-name="display.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/display.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="825">
-              <caret line="116" column="45" lean-forward="true" selection-start-line="116" selection-start-column="45" selection-end-line="116" selection-end-column="45" />
+            <state relative-caret-position="297">
+              <caret line="43" column="28" lean-forward="true" selection-start-line="43" selection-start-column="28" selection-end-line="43" selection-end-column="28" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
-                <element signature="e#431#461#0" expanded="false" />
+                <element signature="e#445#475#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="generation0.p" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/saved_nets/generation0.p">
-          <provider selected="true" editor-type-id="LargeFileEditor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
             </state>
           </provider>
         </entry>
@@ -165,11 +139,11 @@
         <option value="$PROJECT_DIR$/config-feedforward" />
         <option value="$PROJECT_DIR$/neat_wrapper.py" />
         <option value="$PROJECT_DIR$/Net_Extractor" />
-        <option value="$PROJECT_DIR$/neural_net.py" />
         <option value="$PROJECT_DIR$/extract_nets.py" />
         <option value="$PROJECT_DIR$/training.py" />
         <option value="$PROJECT_DIR$/objects.py" />
         <option value="$PROJECT_DIR$/display.py" />
+        <option value="$PROJECT_DIR$/neural_net.py" />
       </list>
     </option>
   </component>
@@ -195,6 +169,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -207,7 +182,6 @@
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -389,18 +363,18 @@
     <frame x="-13" y="-13" width="3026" height="1966" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16277473" sideWeight="0.4964476" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16517857" sideWeight="0.4964476" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="R Packages" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="R Graphics" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33881387" sideWeight="0.50755495" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33881387" sideWeight="0.49244505" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33881387" sideWeight="0.49725273" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33881387" sideWeight="0.49244505" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15831044" sideWeight="0.5035524" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39929536" sideWeight="0.49725273" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15831044" sideWeight="0.5035524" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -452,7 +426,7 @@
           <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="28" />
+      <option name="time" value="29" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -547,29 +521,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/neural_net.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config-feedforward">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1617">
-          <caret line="49" column="28" lean-forward="false" selection-start-line="49" selection-start-column="28" selection-end-line="49" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/extract_nets.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="710">
-          <caret line="28" column="20" lean-forward="false" selection-start-line="28" selection-start-column="20" selection-end-line="30" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/saved_nets/generation0.p">
       <provider selected="true" editor-type-id="LargeFileEditor">
         <state relative-caret-position="0">
@@ -577,69 +528,91 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/config-feedforward">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="528">
+          <caret line="49" column="28" lean-forward="false" selection-start-line="49" selection-start-column="28" selection-end-line="49" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Neat.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-610">
+        <state relative-caret-position="33">
           <caret line="203" column="16" lean-forward="false" selection-start-line="203" selection-start-column="16" selection-end-line="203" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/training.py">
+    <entry file="file://$PROJECT_DIR$/neat_wrapper.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2937">
-          <caret line="119" column="44" lean-forward="false" selection-start-line="119" selection-start-column="44" selection-end-line="119" selection-end-column="44" />
+        <state relative-caret-position="33">
+          <caret line="13" column="71" lean-forward="false" selection-start-line="13" selection-start-column="71" selection-end-line="13" selection-end-column="71" />
           <folding>
-            <element signature="e#2832#3595#0" expanded="false" />
-            <element signature="e#3632#3988#0" expanded="false" />
+            <element signature="e#82#93#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/neat_wrapper.py">
+    <entry file="file://$PROJECT_DIR$/extract_nets.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-16">
-          <caret line="13" column="71" lean-forward="true" selection-start-line="13" selection-start-column="71" selection-end-line="13" selection-end-column="71" />
-          <folding>
-            <element signature="e#82#93#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="99">
+          <caret line="3" column="29" lean-forward="false" selection-start-line="3" selection-start-column="29" selection-end-line="3" selection-end-column="29" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/objects.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-478">
-          <caret line="73" column="19" lean-forward="false" selection-start-line="73" selection-start-column="19" selection-end-line="73" selection-end-column="19" />
+        <state relative-caret-position="611">
+          <caret line="161" column="45" lean-forward="false" selection-start-line="161" selection-start-column="45" selection-end-line="161" selection-end-column="45" />
           <folding>
             <element signature="e#103#186#0" expanded="false" />
             <element signature="e#211#243#0" expanded="false" />
             <element signature="e#267#487#0" expanded="false" />
-            <element signature="e#513#584#0" expanded="false" />
             <element signature="e#616#654#0" expanded="false" />
             <element signature="e#684#829#0" expanded="false" />
             <element signature="e#874#1005#0" expanded="false" />
-            <element signature="e#1026#1376#0" expanded="false" />
-            <element signature="e#1396#1613#0" expanded="false" />
-            <element signature="e#1640#2445#0" expanded="false" />
-            <element signature="e#2361#2445#0" expanded="false" />
-            <element signature="e#2471#4410#0" expanded="false" />
-            <element signature="e#2897#3109#0" expanded="false" />
-            <element signature="e#3158#3355#0" expanded="false" />
-            <element signature="e#7597#7758#0" expanded="false" />
-            <element signature="e#7797#9517#0" expanded="false" />
-            <element signature="e#10525#12154#0" expanded="false" />
-            <element signature="e#12201#12720#0" expanded="false" />
+            <element signature="e#1748#2554#0" expanded="false" />
+            <element signature="e#2470#2554#0" expanded="false" />
+            <element signature="e#2580#4519#0" expanded="false" />
+            <element signature="e#3006#3218#0" expanded="false" />
+            <element signature="e#3267#3464#0" expanded="false" />
+            <element signature="e#7277#7677#0" expanded="false" />
+            <element signature="e#9329#11049#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/neural_net.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="83">
+          <caret line="165" column="34" lean-forward="false" selection-start-line="165" selection-start-column="34" selection-end-line="165" selection-end-column="34" />
+          <folding>
+            <element signature="e#52#79#0" expanded="false" />
+            <element signature="e#110#171#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/training.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2393">
+          <caret line="133" column="0" lean-forward="false" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
+          <folding>
+            <element signature="e#2816#3579#0" expanded="false" />
+            <element signature="e#3616#3972#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/display.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="825">
-          <caret line="116" column="45" lean-forward="true" selection-start-line="116" selection-start-column="45" selection-end-line="116" selection-end-column="45" />
+        <state relative-caret-position="297">
+          <caret line="43" column="28" lean-forward="true" selection-start-line="43" selection-start-column="28" selection-end-line="43" selection-end-column="28" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-            <element signature="e#431#461#0" expanded="false" />
+            <element signature="e#445#475#0" expanded="false" />
           </folding>
         </state>
       </provider>

@@ -38,7 +38,7 @@ class Timer():
         print(text + ": {}".format(self.elapsed(time.time() - self.start_time)))
 
 class Logger():
-    self.fitness = log()
+    pass
 class population():
     def __init__(self, sensors, pop_size=100, multithread=False, procs=cpu_count()):
         # initialise the population of agents
