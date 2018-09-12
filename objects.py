@@ -76,18 +76,22 @@ class point_sensor:
         self.relpos = relpos
         self.rad = rad
         self.pos = tuple(sum(t) for t in zip(self.relpos, pos))
+        self.on = 0
 
     def sense(self, pos, bullets, boundary):
         self.pos = tuple(sum(t) for t in zip(self.relpos, pos))
         # work out absolute position
         if outofbound(self.pos, boundary):
-            return 1
+            self.on =1
+            return self.on
             # return 1 if outside the bounding box
         else:
             for bul in bullets:
                 if col(self.pos, bul.pos, self.rad, bul.rad):
-                    return 1
-        return 0
+                    self.on = 1
+                    return self.on
+        self.on = 0
+        return self.on
 
     def mutate(self, scale):
         self.relpos = tuple(sum(t) for t in zip(self.relpos, np.random.normal(0, scale, 2)))

@@ -61,6 +61,9 @@ class gui:
         clock = pygame.time.Clock()
         done = False
         env = environ(hyperparams, self.boundary, 100, [100, 100], [100, 10], bullet_types)
+
+        #We need to display the ship one frame behind, since it moves after the sensors are activated
+        prev_pos =[0,0]
         while not done:
             if loops == env.deaths:
                 done = True
@@ -74,24 +77,18 @@ class gui:
             for bullet in env.bullets:
                 pygame.draw.circle(screen, WHITE, dispos(bullet.pos), bullet.rad)
             #update the sensors again, since we move the plane after the sensors are updated
-            sensor_vals = env.shipsensors()
             if displaySensors:
                 if "line" in env.fighter.sensors and "line" in displaySensors:
-                    env.shipsensors()
                     for sensor in env.fighter.line_sensors:
                         detect_pos = [math.sin(sensor.dir) * sensor.dist + env.fighter.pos[0],
                                       math.cos(sensor.dir) * sensor.dist + env.fighter.pos[1]]
                         pygame.draw.line(screen, DMAGENTA, env.fighter.pos, detect_pos)
                 if "point" in env.fighter.sensors and "point" in displaySensors:
-                    if "line" in env.fighter.sensors:
-                        activesensors =sensor_vals[env.fighter.sensors["line"]:]
-                    else:
-                        activesensors = sensor_vals
-                    for i in range(len(env.fighter.point_sensors)):
-                        if activesensors[i] == 0:
-                            pygame.draw.circle(screen, DGREEN, dispos(env.fighter.point_sensors[i].pos), 1)
+                    for sensor in env.fighter.point_sensors:
+                        if sensor.on:
+                            pygame.draw.circle(screen, RED, dispos(sensor.pos), 3)
                         else:
-                            pygame.draw.circle(screen, RED, dispos(env.fighter.point_sensors[i].pos), 3)
+                            pygame.draw.circle(screen, DGREEN, dispos(sensor.pos), 1)
 
                 if "prox" in env.fighter.sensors and "prox" in displaySensors:
                     for incoming in env.fighter.highlightedpos:
@@ -108,19 +105,19 @@ class gui:
                                              (self.boundary[0], self.boundary[1] - 1))
                         else:
                             pygame.draw.circle(screen, RED, dispos(incoming), 10, 1)
-                p1 = dispos(env.fighter.pos)[0]
-                p2 = dispos(env.fighter.pos)[1]
+                p1 = dispos(prev_pos)[0]
+                p2 = dispos(prev_pos)[1]
                 pygame.draw.polygon(screen, WHITE, [[p1, p2 - 4], [p1 + 2, p2 + 3], [p1 - 2, p2 + 3]])
-                pygame.draw.circle(screen, CYAN, dispos(env.fighter.pos), env.fighter.rad + 1)
+                pygame.draw.circle(screen, CYAN, dispos(prev_pos), env.fighter.rad + 1)
 
             else:
-                p1 = dispos(env.fighter.pos)[0]
-                p2 = dispos(env.fighter.pos)[1]
+                p1 = dispos(prev_pos)[0]
+                p2 = dispos(prev_pos)[1]
                 pygame.draw.polygon(screen, WHITE, [[p1, p2 - 5], [p1 + 3, p2 + 4], [p1 - 3, p2 + 4]])
-                pygame.draw.circle(screen, CYAN, dispos(env.fighter.pos), env.fighter.rad)
-
+                pygame.draw.circle(screen, CYAN, dispos(prev_pos), env.fighter.rad)
+            prev_pos = env.fighter.pos
             pygame.display.flip()
-            clock.tick(45)
+            clock.tick(60)
         pygame.quit()
 
 
@@ -149,5 +146,5 @@ if __name__ == "__main__":
     # cProfile.run('env.eval_fitness(500)')
     GUI = gui()
     hyperparams = (sensors, net)
-    GUI.display_imported_generation("saved_nets/AllSensors290.p", bullet_types={"spiral": 1, "random": 1, "aimed":20})
+    GUI.display_imported_generation("saved_nets/AllSensors290.p", bullet_types={"spiral": 1, "random": 1})
     # GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})
