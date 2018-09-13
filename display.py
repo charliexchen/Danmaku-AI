@@ -53,8 +53,7 @@ class gui:
         self.display_net((sensors, fittest_net), loops, bullet_types)
 
     def display_net(self, hyperparams, loops=-1, bullet_types={"aimed:": 15, "random": 1, "spiral": 1},
-                    displaySensors=set(["point", "line", "prox"])):
-
+                    displaySensors={ "line"}):
 
         pygame.init()
 
@@ -71,7 +70,6 @@ class gui:
         prev_pos = [0, 0]
         timer = Timer()
         while not done:
-
             if loops == env.deaths:
                 done = True
             if env.update():
@@ -119,39 +117,39 @@ class gui:
                                              (self.boundary[0], self.boundary[1] - 1))
                         else:
                             pygame.draw.circle(screen, RED, dispos(incoming), 10, 1)
-                p1 = dispos(prev_pos)[0]
-                p2 = dispos(prev_pos)[1]
+                p1, p2 = dispos(prev_pos)
                 pygame.draw.polygon(screen, WHITE, [[p1, p2 - 4], [p1 + 2, p2 + 3], [p1 - 2, p2 + 3]])
                 pygame.draw.circle(screen, CYAN, dispos(prev_pos), env.fighter.rad + 1)
 
             else:
-                p1 = dispos(prev_pos)[0]
-                p2 = dispos(prev_pos)[1]
+                p1,p2 = dispos(prev_pos)
                 pygame.draw.polygon(screen, WHITE, [[p1, p2 - 5], [p1 + 3, p2 + 4], [p1 - 3, p2 + 4]])
                 pygame.draw.circle(screen, CYAN, dispos(prev_pos), env.fighter.rad)
+
             pygame.draw.circle(screen, DRED, dispos(env.spawn), 30)
             prev_pos = env.fighter.pos
-
             myfont = pygame.font.SysFont("monospace", 15)
-
-            # render text
             label = myfont.render(str(env.damage), 1, YELLOW)
             screen.blit(label, env.spawn)
-
             pygame.display.flip()
             clock.tick(30)
 
 
 if __name__ == "__main__":
-    sensors = {"point": [
+    sensors = {
+        "point": [
         (0, -10, 1), (10, -10, 1), (-10, -10, 1), (-10, 0, 1), (10, 0, 1),
         (0, -20, 1), (20, -20, 1), (-20, -20, 1), (-20, 0, 1), (20, 0, 1),
         (0, -30, 1), (30, -30, 1), (-30, -30, 1), (-30, 0, 1), (30, 0, 1),
         (0, -50, 1), (10, -20, 1), (-10, -20, 1), (-50, 0, 1), (50, 0, 1),
-        (0, 15, 1), (10, -30, 1), (-10, -30, 1)],
-        "prox": 3, "line": 12, "loc": True}
-
+        (0, 15, 1), (10, -30, 1), (-10, -30, 1)
+        ],
+        "prox": 3,
+        "line": 12,
+        "loc": True,
+    }
     input_len = 0
+
     if "point" in sensors:
         input_len += len(sensors["point"])
     if "prox" in sensors:
@@ -160,6 +158,7 @@ if __name__ == "__main__":
         input_len += sensors["line"]
     if "loc" in sensors:
         input_len += 2
+
     net = dense_net(input_len, 10, relu, recursive=False)
     net.add_layer(10, tanh)
     # env = environ((8, net))
@@ -168,4 +167,4 @@ if __name__ == "__main__":
     GUI = gui()
     hyperparams = (sensors, net)
     GUI.display_imported_generation("saved_nets/generation290.p", bullet_types={"spiral": 1, "random": 1})
-    # GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})
+    #GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})

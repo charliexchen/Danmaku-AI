@@ -25,8 +25,8 @@ if __name__ == "__main__":
             for env in imported_pop:
                 fitness.append(env.fitness)
             fitness_data[file_name] = fitness
-        except:
-            print("{} not extracted".format(file_name))
+        except AttributeError:
+            print(f"{file_name} not extracted")
     pickle.dump(fitness_data, open("fitness_data.p", "wb"))
     '''
     dir = ".\saved_nets\generation290.p"

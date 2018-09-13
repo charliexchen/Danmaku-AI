@@ -12,10 +12,10 @@ for key in fitness_data.keys():
         if i not in letters:
             number += i
     number = int(number)
-
     x.append(number)
     y.append(np.mean(fitness_data[key]))
     data.append([number,np.mean(fitness_data[key])])
+
 list.sort(data, key = lambda i: i[0])
 X=[i[0] for i in data]
 Y=[i[1] for i in data]

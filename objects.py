@@ -1,4 +1,4 @@
-import math, copy
+import math, copy, enum
 import numpy as np
 from functools import reduce
 import pdb
@@ -14,11 +14,8 @@ def dist(p1, p2):
 
 
 def dot(v1, v2):
-    try:
-        assert len(v1) == len(v2)
-        return sum([v1[i] + v2[i] for i in range(len(v1))])
-    except AssertionError:
-        print("Error -- dot product has different lengths {} and {}".format(len(v1), len(v2)))
+    assert len(v1) == len(v2), "Error -- dot product has different lengths {} and {}".format(len(v1), len(v2))
+    return sum([v1[i] + v2[i] for i in range(len(v1))])
 
 
 def angle(p1, p2):
@@ -151,7 +148,7 @@ class ship:
     def __init__(self, maxvel, initpos, rad, boundary, env,
                  sensors={"point": [(0, -5)], "line": 8, "prox": 0, "pos": False}, cooldown=6, focusing=True):
         self.sensors = sensors
-        self.input_len=0
+        self.input_len = 0
         if "point" in sensors:
             self.input_len += len(sensors["point"])
         if "prox" in sensors:
@@ -189,10 +186,7 @@ class ship:
 
     def move(self, input):
         if self.focusing:
-            if input[2]>0.5:
-                self.focus = True
-            else:
-                self.focus = False
+            self.focus = (input[2] < 0.5)
             if self.focus:
                 self.cooldown -= 3
                 if not self.cooldown > 0:
@@ -205,9 +199,9 @@ class ship:
                     self.env.spawn_laser(self.pos, self.focus)
             move = [i * self.max_vel for i in input[:2]]
 
-            if self.focus:
-                move = [v if v < self.foc_vel else self.foc_vel for v in input]
-                move = [v if v > -self.foc_vel else -self.foc_vel for v in move]
+            #if self.focus:
+            #    move = [v if v < self.foc_vel else self.foc_vel for v in input]
+            #    move = [v if v > -self.foc_vel else -self.foc_vel for v in move]
             self.pos = [self.pos[i] + move[i] for i in range(2)]
         else:
             self.cooldown -= 1
@@ -246,8 +240,9 @@ class environ:
 
         # This is the hyperparameters for the environment -- the sensor values of ths ship and the neural network behind it
         self.sensors, self.controller = hyperparams
+
         # Initialise the ship
-        self.fighter = ship(8, shipinit, 1, boundary, self, self.sensors)
+        self.fighter = ship(8, shipinit, 0, boundary, self, self.sensors)
         self.shipinit = shipinit
 
         # These dictinaries wstore the cooldowns for each bullet spawner
@@ -263,7 +258,6 @@ class environ:
         self.fitness = 0
         self.deaths = 0
         self.move_dir = [0, 0]
-
         self.lasers = []
 
     def reset(self):
@@ -295,10 +289,10 @@ class environ:
                     elif bullet_type == "spiral":
                         # predictable spiral pattern
                         self.dir += 80
-                        while self.dir > 2.5 * 3.1416:
-                            self.dir -= 3.1416
-                        while self.dir < 1.5 * 3.1416:
-                            self.dir += 3.1416
+                        while self.dir > 2.5 * math.pi:
+                            self.dir -= math.pi
+                        while self.dir < 1.5 * math.pi:
+                            self.dir += math.pi
                         spd = 3.0
                         angle = self.dir
                         v = [spd * np.sin(angle), spd * np.cos(angle)]
@@ -307,23 +301,23 @@ class environ:
                     elif bullet_type == "random":
                         # random spewing of bullets aimed at the ship
                         spd = np.random.uniform(2.0, 5)
-                        angle = np.random.uniform(1.5 * 3.1416, 2.5 * 3.1416)
+                        angle = np.random.uniform(1.5 * math.pi, 2.5 * math.pi)
                         v = [spd * np.sin(angle), spd * np.cos(angle)]
                         self.bullets.append(bullet(v, self.spawn, 6))
 
     def spawn_laser(self, pos, focused=True):
-        unfoc_patter = [[[0, -5], [0, -10]], [[0, -5], [2, -9]], [[0, -5], [-2, -9]], [[0, -5], [4, -8]],
-                        [[0, -5], [-4, -8]]]
+        unfoc_patter = [[[0, -5], [0, -10]], [[0, -5], [2, -9]], [[0, -5], [-2, -9]], [[0, -5], [4, -8]], [[0, -5], [-4, -8]]]
         foc_patter = [[[5, -5], [0, -15]], [[-5, -5], [0, -15]], [[-5, -5], [2, -15]], [[5, -5], [-2, -15]]]
         if focused:
             for shot in foc_patter:
-                self.lasers.append(laser([shot[0][i] + pos[i] for i in range(2)], shot[1]))
+                self.lasers.append(laser([shot[0][i] + pos[i]
+                                          for i in range(2)], shot[1]))
         else:
             for shot in unfoc_patter:
-                self.lasers.append(laser([shot[0][i] + pos[i] for i in range(2)], shot[1]))
+                self.lasers.append(laser([shot[0][i] + pos[i]
+                                          for i in range(2)], shot[1]))
 
     def update(self):
-
         self.spawn[0] += self.spawn_speed
         if self.spawn[0] > 170:
             self.spawn_speed = -1
