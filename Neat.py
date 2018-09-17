@@ -269,10 +269,6 @@ class Neat:
             self.add_node(par, chi, activation=sigmoid)
 
 
-
-
-
-
 def test_neat():
     # A test function to ensure that the stuff in the Neat module works as intended
 

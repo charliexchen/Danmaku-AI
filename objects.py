@@ -145,7 +145,7 @@ class line_sensor:
 
 
 class ship:
-    def __init__(self, maxvel, initpos, rad, boundary, env,
+    def __init__(self, max_vel, init_pos, rad, boundary, env,
                  sensors={"point": [(0, -5)], "line": 8, "prox": 0, "pos": False}, cooldown=6, focusing=True):
         self.sensors = sensors
         self.input_len = 0
@@ -158,25 +158,27 @@ class ship:
         if "line" in sensors:
             self.input_len += sensors["line"]
         # sets cap on speed
-        self.max_vel = maxvel
+        self.max_vel = max_vel
 
         # initialises position
-        self.pos = initpos
+        self.pos = init_pos
         # pdb.set_trace()
         self.max_cooldown = cooldown
         self.cooldown = cooldown
         self.focusing = focusing
         if focusing:
             self.focus = False
-            self.foc_vel = maxvel
+            self.foc_vel = max_vel/3
         self.env = env
 
         # determines the type of sensors
         if "point" in self.sensors:
-            self.point_sensors = [point_sensor(initpos, i[:2], i[2]) for i in self.sensors["point"]]
+            self.point_sensors = [point_sensor(init_pos, i[:2], i[2]) for i in self.sensors["point"]]
+
         if "prox" in self.sensors:
             self.prox_sensors = self.sensors["prox"]
             self.highlightedpos = [(0, 0)] * self.prox_sensors
+
         if "line" in self.sensors:
             count = self.sensors["line"]
             self.line_sensors = [line_sensor(2 * math.pi * i / count, boundary) for i in range(count)]
@@ -197,11 +199,11 @@ class ship:
                 if not self.cooldown > 0:
                     self.cooldown = self.max_cooldown
                     self.env.spawn_laser(self.pos, self.focus)
-            move = [i * self.max_vel for i in input[:2]]
 
-            #if self.focus:
-            #    move = [v if v < self.foc_vel else self.foc_vel for v in input]
-            #    move = [v if v > -self.foc_vel else -self.foc_vel for v in move]
+            move = [i * self.max_vel for i in input[:2]]
+            if self.focus:
+                move = [v if v < self.foc_vel else self.foc_vel for v in move]
+                move = [v if v > -self.foc_vel else -self.foc_vel for v in move]
             self.pos = [self.pos[i] + move[i] for i in range(2)]
         else:
             self.cooldown -= 1
