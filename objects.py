@@ -146,7 +146,7 @@ class line_sensor:
 
 class ship:
     def __init__(self, max_vel, init_pos, rad, boundary, env,
-                 sensors={"point": [(0, -5)], "line": 8, "prox": 0, "pos": False}, cooldown=6, focusing=True):
+                 sensors={"point": [(0, -5)], "line": 8, "prox": 0, "pos": False}, cooldown=6, focusing=False):
         self.sensors = sensors
         self.input_len = 0
         if "point" in sensors:
@@ -162,7 +162,6 @@ class ship:
 
         # initialises position
         self.pos = init_pos
-        # pdb.set_trace()
         self.max_cooldown = cooldown
         self.cooldown = cooldown
         self.focusing = focusing
@@ -231,7 +230,7 @@ class ship:
 
 
 class environ:
-    def __init__(self, hyperparams, boundary=[200, 200], bullet_cap=100, shipinit=[100, 100],
+    def __init__(self, hyperparams, boundary=[200, 200], bullet_cap=1000, shipinit=[100, 100],
                  enemy_spawn=[100, 10], bullet_types={"aimed": 15, "spiral": 1, "random": 1}):
         # some parameters for the environment
         self.boundary = boundary
@@ -290,22 +289,24 @@ class environ:
 
                     elif bullet_type == "spiral":
                         # predictable spiral pattern
-                        self.dir += 80
-                        while self.dir > 2.5 * math.pi:
-                            self.dir -= math.pi
-                        while self.dir < 1.5 * math.pi:
-                            self.dir += math.pi
-                        spd = 3.0
-                        angle = self.dir
-                        v = [spd * np.sin(angle), spd * np.cos(angle)]
-                        self.bullets.append(bullet(v, self.spawn, 6))
+                        for i in range(1):
+                            self.dir += 80
+                            while self.dir > 2.5 * math.pi:
+                                self.dir -= math.pi
+                            while self.dir < 1.5 * math.pi:
+                                self.dir += math.pi
+                            spd = 3.0
+                            angle = self.dir
+                            v = [spd * np.sin(angle), spd * np.cos(angle)]
+                            self.bullets.append(bullet(v, self.spawn, 6))
 
                     elif bullet_type == "random":
                         # random spewing of bullets aimed at the ship
-                        spd = np.random.uniform(2.0, 5)
-                        angle = np.random.uniform(1.5 * math.pi, 2.5 * math.pi)
-                        v = [spd * np.sin(angle), spd * np.cos(angle)]
-                        self.bullets.append(bullet(v, self.spawn, 6))
+                        for i in range(1):
+                            spd = np.random.uniform(2.0, 5)
+                            angle = np.random.uniform(1.5 * math.pi, 2.5 * math.pi)
+                            v = [spd * np.sin(angle), spd * np.cos(angle)]
+                            self.bullets.append(bullet(v, self.spawn, 5))
 
     def spawn_laser(self, pos, focused=True):
         unfoc_patter = [[[0, -5], [0, -10]], [[0, -5], [2, -9]], [[0, -5], [-2, -9]], [[0, -5], [4, -8]], [[0, -5], [-4, -8]]]
@@ -414,7 +415,5 @@ class environ:
         for i in range(maxtime):
             # Rewards the agent for damage dealt to enemy ship
             if self.update():
-                print(self.damage)
                 return self.damage
-        print(self.damage)
         return self.damage

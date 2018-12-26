@@ -8,6 +8,7 @@ from multiprocessing import Pool, TimeoutError, cpu_count
 import os
 import time
 import math
+from enums import sensorType
 
 
 def f(env):
@@ -39,19 +40,20 @@ class Timer():
 
 class Logger():
     pass
+
 class population():
     def __init__(self, sensors, pop_size=100, multithread=False, procs=cpu_count()):
         # initialise the population of agents
         self.agents = []
         input_len = 0
-        if "point" in sensors:
-            input_len += len(sensors["point"])
-        if "prox" in sensors:
-            input_len += 2 * sensors["prox"]
-        if "loc" in sensors:
+        if sensorType.POINT in sensors:
+            input_len += len(sensors[sensorType.POINT ])
+        if sensorType.PROXIMITY in sensors:
+            input_len += 2 * sensors[sensorType.PROXIMITY]
+        if sensorType.LOCATION in sensors:
             input_len += 2
-        if "line" in sensors:
-            input_len += sensors["line"]
+        if sensorType.LINE in sensors:
+            input_len += sensors[sensorType.LINE]
         for i in range(pop_size):
             self.agents.append(environ((sensors, dense_net(input_len, 64, relu, recursive=True, rec_size=16)),
                                        bullet_types={"aimed": 15, "spiral": 1, "random": 1}))
@@ -133,7 +135,7 @@ if __name__ == "__main__":
         "prox": 3, "loc": True, "line": 16}
 
     # sensor_pos = {"loc":True, "line": 16}
-    pop = population(sensor_pos, 1000)
+    pop = population(sensor_pos, 10)
 
     starting_gen = input("Start from which existing generation? (return empty if no such generation exists):")
     if starting_gen == "":

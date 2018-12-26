@@ -1,5 +1,4 @@
 import numpy as np
-import pdb
 
 
 def sigmoid(x):
@@ -29,18 +28,22 @@ class dense_layer():
         try:
             assert (len(input) == self.input_size)
         except AssertionError:
-            print("Input size incorrect: expected {} but obtained {}".format(self.input_size, len(input)))
-        return np.array([self.activation(row[0] + sum(input * row[1:])) for row in self.weights])
+            print("Input size incorrect: expected {} but obtained {}".format(
+                self.input_size, len(input)))
+        return np.array(
+            [self.activation(row[0] + sum(input * row[1:])) for row in self.weights])
 
     def mutate(self, rate):
-        self.weights += np.random.normal(0, rate, [self.output_size, self.input_size + 1])
+        self.weights += np.random.normal(0, rate,
+                                         [self.output_size, self.input_size + 1])
 
     def reset(self, var=0.2):
         self.weights = np.random.normal(0, var, [self.output_size, self.input_size + 1])
 
 
 class dense_net():
-    def __init__(self, input_size, output_size, output_rule, initvar=0.2, recursive=False, rec_size=4):
+    def __init__(self, input_size, output_size, output_rule, initvar=0.2,
+                 recursive=False, rec_size=4):
         self.input_size = input_size
         self.layers = [dense_layer(input_size, output_size, output_rule, initvar)]
         self.recursive = recursive
@@ -57,15 +60,22 @@ class dense_net():
                 except AssertionError:
                     print("Error -- Rec Net already finalised")
                 self.layers.append(
-                    dense_layer(self.layers[-1].output_size, output_size + self.rec_size, activation, initvar))
-                self.layers[0] = dense_layer(self.rec_size + self.input_size, self.layers[0].output_size,
-                                             self.layers[0].activation, self.layers[0].initvar)
+                    dense_layer(self.layers[-1].output_size,
+                                output_size + self.rec_size, activation, initvar))
+                self.layers[0] = dense_layer(self.rec_size + self.input_size,
+                                             self.layers[0].output_size,
+                                             self.layers[0].activation,
+                                             self.layers[0].initvar)
                 self.previous = [0 for i in range(self.rec_size)]
                 self.finalised = True
             else:
-                self.layers.append(dense_layer(self.layers[-1].output_size, output_size, activation, initvar))
+                self.layers.append(
+                    dense_layer(self.layers[-1].output_size, output_size, activation,
+                                initvar))
         else:
-            self.layers.append(dense_layer(self.layers[-1].output_size, output_size, activation, initvar))
+            self.layers.append(
+                dense_layer(self.layers[-1].output_size, output_size, activation,
+                            initvar))
 
     def activate(self, input):
         if self.recursive:
@@ -82,10 +92,12 @@ class dense_net():
                 assert (len(input) == self.input_size)
         except AssertionError:
             if self.recursive:
-                print("Input size incorrect: expected {} but obtained {}".format(self.input_size + self.rec_size,
-                                                                                 len(input)))
+                print("Input size incorrect: expected {} but obtained {}".format(
+                    self.input_size + self.rec_size,
+                    len(input)))
             else:
-                print("Input size incorrect: expected {} but obtained {}".format(self.input_size, len(input)))
+                print("Input size incorrect: expected {} but obtained {}".format(
+                    self.input_size, len(input)))
 
         output = input
         for layer in self.layers:
@@ -151,8 +163,10 @@ def LSTM():
     def activate(self, input):
         concat_input = input + self.latent1
         concat_output = [net.activate(concat_input) for net in self.nets[:3]]
-        scale1 = [self.latent2[i] * concat_output[0][i] for i in range(self.latent_size)]
-        scale2 = [concat_output[2][i] * concat_output[1][i] for i in range(self.latent_size)]
+        scale1 = [self.latent2[i] * concat_output[0][i] for i in
+                  range(self.latent_size)]
+        scale2 = [concat_output[2][i] * concat_output[1][i] for i in
+                  range(self.latent_size)]
         self.latent2 = [tanh(scale1[i] + scale2[i]) for i in range(self.latent_size)]
         output = [self.latent2[i] * concat_output[3] for i in range(self.latent_size)]
         self.latent1 = output
@@ -163,14 +177,17 @@ def LSTM():
         for net in self.nets:
             net.mutate(rate)
 
+
 def make_focused(net, sensor_len):
-    net.input_size+=2
-    net.layers[0].input_size+=2
-    net.layers[0].weights=np.insert(net.layers[0].weights, sensor_len+1,0.0, axis=1)
-    net.layers[0].weights=np.insert(net.layers[0].weights, sensor_len+1,0.0, axis=1)
-    output_size = net.layers[-1].output_size-net.rec_size
+    net.input_size += 2
+    net.layers[0].input_size += 2
+    net.layers[0].weights = np.insert(net.layers[0].weights, sensor_len + 1, 0.0,
+                                      axis=1)
+    net.layers[0].weights = np.insert(net.layers[0].weights, sensor_len + 1, 0.0,
+                                      axis=1)
+    output_size = net.layers[-1].output_size - net.rec_size
     net.layers[-1].output_size += 1
-    net.layers[-1].weights=np.insert(net.layers[-1].weights, output_size, 0.0, axis=0)
+    net.layers[-1].weights = np.insert(net.layers[-1].weights, output_size, 0.0, axis=0)
     return net
 
 

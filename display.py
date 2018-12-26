@@ -3,7 +3,7 @@ import pickle, math
 from objects import environ, angle
 from neural_net import dense_net, relu, sigmoid, tanh, make_focused
 from training import Timer
-import pdb, cProfile
+from enums import bulletType, sensorType
 
 # Colors
 BLACK = (0, 0, 0)
@@ -29,7 +29,9 @@ class gui:
         self.boundary = boundary
 
     def display_imported_generation(self, filename="generation450.p", loops=-1,
-                                    bullet_types={"spiral": 1, "aimed:": 15}):
+                                    bullet_types=None):
+        if bullet_types == None:
+            bullet_types = {bulletType.SPIRAL: 1, bulletType.AIMED: 15}
         trained_pop = pickle.load(open(filename, "rb"))
         # pdb.set_trace()
         print("Imported {}".format(filename))
@@ -41,30 +43,35 @@ class gui:
         print("Fitness of best performer: {}".format(fittest_value))
 
         sensors = trained_pop["sensor_type"]
-        if "prox" in sensors:
-            print("{} proximity sensors extracted".format(sensors["prox"]))
-        if "loc" in sensors:
+        if sensorType.PROXIMITY in sensors:
+            print(
+                "{} proximity sensors extracted".format(sensors[sensorType.PROXIMITY]))
+        if sensorType.LOCATION in sensors:
             print("Location sensors extracted")
-        if "point" in sensors:
+        if sensorType.POINT in sensors:
             print("Pixels sensors extracted")
-        if "line" in sensors:
-            print("{} ray sensors extracted".format(sensors["line"]))
+        if sensorType.LINE in sensors:
+            print("{} ray sensors extracted".format(sensors[sensorType.LINE]))
 
         self.display_net((sensors, fittest_net), loops, bullet_types)
 
-    def display_net(self, hyperparams, loops=-1, bullet_types={"aimed:": 15, "random": 1, "spiral": 1},
-                    displaySensors={ "line"}):
-
+    def display_net(self, hyperparams, loops=-1, bullet_types=None,
+                    displaySensors=None):
+        if displaySensors == None:
+            displaySensors = {sensorType.LINE, sensorType.PROXIMITY, sensorType.POINT}
+        if bullet_types == None:
+            bulletTypes = {bullet_types.AIMED: 15, bulletType.RANDOM: 1,
+                           bulletType.SPIRAL: 1}
         pygame.init()
 
         screen = pygame.display.set_mode(self.boundary)
 
         # Set the title of the window
         pygame.display.set_caption('bullet dodge')
-
         clock = pygame.time.Clock()
         done = False
-        env = environ(hyperparams, self.boundary, 100, [100, 100], [100, 10], bullet_types)
+        env = environ(hyperparams, self.boundary, 1000, [100, 100], [100, 10],
+                      bullet_types)
 
         # We need to display the ship one frame behind, since it moves after the sensors are activated
         prev_pos = [0, 0]
@@ -76,7 +83,6 @@ class gui:
                 print("Hit after dealing {} damage".format(env.damage))
                 timer.elapsed_time()
                 timer.reset()
-                env.reset()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:  # If user clicked close
                     done = True
@@ -85,45 +91,52 @@ class gui:
                 pygame.draw.circle(screen, WHITE, dispos(bullet.pos), bullet.rad)
             for laser in env.lasers:
                 dir = angle([0, 0], laser.v)
-                s_pos = [math.sin(dir) * 8 + laser.pos[0], math.cos(dir) * 8 + laser.pos[1]]
-                e_pos = [math.sin(dir) * -8 + laser.pos[0], math.cos(dir) * -8 + laser.pos[1]]
+                s_pos = [math.sin(dir) * 8 + laser.pos[0],
+                         math.cos(dir) * 8 + laser.pos[1]]
+                e_pos = [math.sin(dir) * -8 + laser.pos[0],
+                         math.cos(dir) * -8 + laser.pos[1]]
                 pygame.draw.line(screen, WHITE, s_pos, e_pos)
             # update the sensors again, since we move the plane after the sensors are updated
             if displaySensors:
-                if "line" in env.fighter.sensors and "line" in displaySensors:
+                if sensorType.LINE in env.fighter.sensors and sensorType.LINE in displaySensors:
                     for sensor in env.fighter.line_sensors:
                         detect_pos = [math.sin(sensor.dir) * sensor.dist + prev_pos[0],
                                       math.cos(sensor.dir) * sensor.dist + prev_pos[1]]
                         pygame.draw.line(screen, DMAGENTA, prev_pos, detect_pos)
-                if "point" in env.fighter.sensors and "point" in displaySensors:
+                if sensorType.POINT in env.fighter.sensors and sensorType.POINT in displaySensors:
                     for sensor in env.fighter.point_sensors:
                         if sensor.on:
                             pygame.draw.circle(screen, RED, dispos(sensor.pos), 3)
                         else:
                             pygame.draw.circle(screen, DGREEN, dispos(sensor.pos), 1)
 
-                if "prox" in env.fighter.sensors and "prox" in displaySensors:
+                if sensorType.PROXIMITY in env.fighter.sensors and sensorType.PROXIMITY in displaySensors:
                     for incoming in env.fighter.highlightedpos:
-                        pygame.draw.line(screen, DRED, dispos(incoming), dispos(prev_pos))
+                        pygame.draw.line(screen, DRED, dispos(incoming),
+                                         dispos(prev_pos))
                         if incoming[0] == 0:
-                            pygame.draw.line(screen, RED, (1, 0), (1, self.boundary[1]))
+                            pygame.draw.line(screen, DRED, (1, 0),
+                                             (1, self.boundary[1]))
                         elif incoming[0] == self.boundary[0]:
-                            pygame.draw.line(screen, RED, (self.boundary[0] - 1, 0),
+                            pygame.draw.line(screen, DRED, (self.boundary[0] - 1, 0),
                                              (self.boundary[0] - 1, self.boundary[1]))
                         elif incoming[1] == 0:
-                            pygame.draw.line(screen, RED, (0, 1), (self.boundary[0], 1))
+                            pygame.draw.line(screen, DRED, (0, 1),
+                                             (self.boundary[0], 1))
                         elif incoming[1] == self.boundary[1]:
-                            pygame.draw.line(screen, RED, (0, self.boundary[1] - 1),
+                            pygame.draw.line(screen, DRED, (0, self.boundary[1] - 1),
                                              (self.boundary[0], self.boundary[1] - 1))
                         else:
-                            pygame.draw.circle(screen, RED, dispos(incoming), 10, 1)
+                            pygame.draw.circle(screen, DRED, dispos(incoming), 10, 1)
                 p1, p2 = dispos(prev_pos)
-                pygame.draw.polygon(screen, WHITE, [[p1, p2 - 4], [p1 + 2, p2 + 3], [p1 - 2, p2 + 3]])
+                pygame.draw.polygon(screen, WHITE,
+                                    [[p1, p2 - 4], [p1 + 2, p2 + 3], [p1 - 2, p2 + 3]])
                 pygame.draw.circle(screen, CYAN, dispos(prev_pos), env.fighter.rad + 1)
 
             else:
-                p1,p2 = dispos(prev_pos)
-                pygame.draw.polygon(screen, WHITE, [[p1, p2 - 5], [p1 + 3, p2 + 4], [p1 - 3, p2 + 4]])
+                p1, p2 = dispos(prev_pos)
+                pygame.draw.polygon(screen, WHITE,
+                                    [[p1, p2 - 5], [p1 + 3, p2 + 4], [p1 - 3, p2 + 4]])
                 pygame.draw.circle(screen, CYAN, dispos(prev_pos), env.fighter.rad)
 
             pygame.draw.circle(screen, DRED, dispos(env.spawn), 30)
@@ -132,31 +145,32 @@ class gui:
             label = myfont.render(str(env.damage), 1, YELLOW)
             screen.blit(label, env.spawn)
             pygame.display.flip()
-            clock.tick(30)
+            clock.tick(24)
 
 
 if __name__ == "__main__":
+    print(sensorType.POINT)
     sensors = {
-        "point": [
-        (0, -10, 1), (10, -10, 1), (-10, -10, 1), (-10, 0, 1), (10, 0, 1),
-        (0, -20, 1), (20, -20, 1), (-20, -20, 1), (-20, 0, 1), (20, 0, 1),
-        (0, -30, 1), (30, -30, 1), (-30, -30, 1), (-30, 0, 1), (30, 0, 1),
-        (0, -50, 1), (10, -20, 1), (-10, -20, 1), (-50, 0, 1), (50, 0, 1),
-        (0, 15, 1), (10, -30, 1), (-10, -30, 1)
+        sensorType.POINT: [
+            (0, -10, 1), (10, -10, 1), (-10, -10, 1), (-10, 0, 1), (10, 0, 1),
+            (0, -20, 1), (20, -20, 1), (-20, -20, 1), (-20, 0, 1), (20, 0, 1),
+            (0, -30, 1), (30, -30, 1), (-30, -30, 1), (-30, 0, 1), (30, 0, 1),
+            (0, -50, 1), (10, -20, 1), (-10, -20, 1), (-50, 0, 1), (50, 0, 1),
+            (0, 15, 1), (10, -30, 1), (-10, -30, 1)
         ],
-        "prox": 3,
-        "line": 12,
-        "loc": True,
+        sensorType.PROXIMITY: 3,
+        sensorType.LINE: 12,
+        sensorType.LOCATION: True,
     }
     input_len = 0
 
-    if "point" in sensors:
-        input_len += len(sensors["point"])
-    if "prox" in sensors:
-        input_len += 2 * sensors["prox"]
-    if "line" in sensors:
-        input_len += sensors["line"]
-    if "loc" in sensors:
+    if sensorType.POINT in sensors:
+        input_len += len(sensors[sensorType.POINT])
+    if sensorType.PROXIMITY in sensors:
+        input_len += 2 * sensors[sensorType.PROXIMITY]
+    if sensorType.LINE in sensors:
+        input_len += sensors[sensorType.LINE]
+    if sensorType.LOCATION in sensors:
         input_len += 2
 
     net = dense_net(input_len, 10, relu, recursive=False)
@@ -166,5 +180,7 @@ if __name__ == "__main__":
     # cProfile.run('env.eval_fitness(500)')
     GUI = gui()
     hyperparams = (sensors, net)
-    GUI.display_imported_generation("saved_nets/generation290.p", bullet_types={"spiral": 1, "random": 1})
-    #GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})
+    GUI.display_imported_generation("saved_nets/generation290.p",
+                                    bullet_types={bulletType.SPIRAL: 1,
+                                                  bulletType.RANDOM: 1})
+    # GUI.display_net(hyperparams, bullet_types={"spiral": 1, "aimed:": 15})
