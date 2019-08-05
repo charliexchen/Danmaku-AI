@@ -1,0 +1,179 @@
+import pygame
+import pickle, math
+from Game.objects import environ, angle
+from Learning.neural_net import dense_net, relu, tanh
+from Learning.training import Timer
+from Game.enums import *
+from Learning.neural_net import *
+
+# function for rounding floats for display
+def dispos(input):
+    return [int(i) for i in input]
+
+
+class gui:
+    def __init__(self, boundary=[200, 200]):
+        self.boundary = boundary
+
+    def display_imported_generation(self, filename="generation450.p", loops=-1,
+                                    bullet_types=None):
+        if bullet_types == None:
+            bullet_types = {bulletType.SPIRAL: 1, bulletType.AIMED: 15}
+        trained_pop = pickle.load(open(filename, "rb"))
+        print("Imported {}".format(filename))
+
+        fittest_value = max(trained_pop["fitness"])
+        fittest_index = trained_pop["fitness"].index(fittest_value)
+
+        fittest_net = trained_pop["nets"][fittest_index]
+        print("Fitness of best performer: {}".format(fittest_value))
+
+        sensors = trained_pop["sensor_type"]
+        if sensorType.PROXIMITY in sensors:
+            print(
+                "{} proximity sensors extracted".format(sensors[sensorType.PROXIMITY]))
+        if sensorType.LOCATION in sensors:
+            print("Location sensors extracted")
+        if sensorType.POINT in sensors:
+            print("Pixels sensors extracted")
+        if sensorType.LINE in sensors:
+            print("{} ray sensors extracted".format(sensors[sensorType.LINE]))
+
+        self.display_net((sensors, fittest_net), loops, bullet_types)
+
+    def display_net(self, hyperparams, loops=-1, bullet_types=None,
+                    displaySensors=None):
+        if displaySensors == None:
+            displaySensors = {sensorType.LINE, sensorType.PROXIMITY, sensorType.POINT}
+        if bullet_types == None:
+            bulletTypes = {bullet_types.AIMED: 15, bulletType.RANDOM: 1,
+                           bulletType.SPIRAL: 1}
+
+        p = dense_net.export_weights(hyperparams[1])
+        imported_net = dense_net.import_weights(p)
+        hyperparams=(hyperparams[0], imported_net)
+
+
+        env = environ(hyperparams, self.boundary, 1000, [100, 100], [100, 10],
+                      bullet_types)
+        env.fighter.focusing = False
+
+        pygame.init()
+
+        screen = pygame.display.set_mode(self.boundary)
+
+        # Set the title of the window
+        pygame.display.set_caption('bullet dodge')
+        clock = pygame.time.Clock()
+        done = False
+
+        # We need to display the ship one frame behind, since it moves after the sensors are activated
+        prev_pos = [0, 0]
+        timer = Timer()
+        while not done:
+            if loops == env.deaths:
+                done = True
+            if env.update():
+                print("Hit after dealing {} damage".format(env.damage))
+                timer.elapsed_time()
+                timer.reset()
+                env.reset()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:  # If user clicked close
+                    done = True
+            screen.fill(colors.BLACK)
+            for bullet in env.bullets:
+                pygame.draw.circle(screen, colors.WHITE, dispos(bullet.pos), bullet.rad)
+            for laser in env.lasers:
+                dir = angle([0, 0], laser.v)
+                s_pos = [math.sin(dir) * 8 + laser.pos[0],
+                         math.cos(dir) * 8 + laser.pos[1]]
+                e_pos = [math.sin(dir) * -8 + laser.pos[0],
+                         math.cos(dir) * -8 + laser.pos[1]]
+                pygame.draw.line(screen, colors.WHITE, s_pos, e_pos)
+            # update the sensors again, since we move the plane after the sensors are updated
+            if displaySensors:
+                if sensorType.LINE in env.fighter.sensors and sensorType.LINE in displaySensors:
+                    for sensor in env.fighter.line_sensors:
+                        detect_pos = [math.sin(sensor.dir) * sensor.dist + prev_pos[0],
+                                      math.cos(sensor.dir) * sensor.dist + prev_pos[1]]
+                        pygame.draw.line(screen, colors.DMAGENTA, prev_pos, detect_pos)
+                if sensorType.POINT in env.fighter.sensors and sensorType.POINT in displaySensors:
+                    for sensor in env.fighter.point_sensors:
+                        if sensor.on:
+                            pygame.draw.circle(screen, colors.RED, dispos(sensor.pos), 3)
+                        else:
+                            pygame.draw.circle(screen, colors.DGREEN, dispos(sensor.pos), 1)
+
+                if sensorType.PROXIMITY in env.fighter.sensors and sensorType.PROXIMITY in displaySensors:
+                    for incoming in env.fighter.highlightedpos:
+                        pygame.draw.line(screen, colors.DRED, dispos(incoming),
+                                         dispos(prev_pos))
+                        if incoming[0] == 0:
+                            pygame.draw.line(screen, colors.DRED, (1, 0),
+                                             (1, self.boundary[1]))
+                        elif incoming[0] == self.boundary[0]:
+                            pygame.draw.line(screen, colors.DRED, (self.boundary[0] - 1, 0),
+                                             (self.boundary[0] - 1, self.boundary[1]))
+                        elif incoming[1] == 0:
+                            pygame.draw.line(screen, colors.DRED, (0, 1),
+                                             (self.boundary[0], 1))
+                        elif incoming[1] == self.boundary[1]:
+                            pygame.draw.line(screen, colors.DRED, (0, self.boundary[1] - 1),
+                                             (self.boundary[0], self.boundary[1] - 1))
+                        else:
+                            pygame.draw.circle(screen, colors.DRED, dispos(incoming), 10, 1)
+                p1, p2 = dispos(prev_pos)
+                pygame.draw.polygon(screen, colors.WHITE,
+                                    [[p1, p2 - 4], [p1 + 2, p2 + 3], [p1 - 2, p2 + 3]])
+                pygame.draw.circle(screen, colors.CYAN, dispos(prev_pos), env.fighter.rad + 1)
+
+            else:
+                p1, p2 = dispos(prev_pos)
+                pygame.draw.polygon(screen, colors.WHITE,
+                                    [[p1, p2 - 5], [p1 + 3, p2 + 4], [p1 - 3, p2 + 4]])
+                pygame.draw.circle(screen, colors.CYAN, dispos(prev_pos), env.fighter.rad)
+
+            pygame.draw.circle(screen, colors.DRED, dispos(env.spawn), 30)
+            prev_pos = env.fighter.pos
+            myfont = pygame.font.SysFont("monospace", 15)
+            label = myfont.render(str(env.damage), 1, colors.YELLOW)
+            screen.blit(label, env.spawn)
+            pygame.display.flip()
+            clock.tick(24)
+
+
+if __name__ == "__main__":
+    sensors = {
+        sensorType.POINT: [
+            (0, -10, 1), (10, -10, 1), (-10, -10, 1), (-10, 0, 1), (10, 0, 1),
+            (0, -20, 1), (20, -20, 1), (-20, -20, 1), (-20, 0, 1), (20, 0, 1),
+            (0, -30, 1), (30, -30, 1), (-30, -30, 1), (-30, 0, 1), (30, 0, 1),
+            (0, -50, 1), (10, -20, 1), (-10, -20, 1), (-50, 0, 1), (50, 0, 1),
+            (0, 15, 1), (10, -30, 1), (-10, -30, 1)
+        ],
+        sensorType.PROXIMITY: 3,
+        sensorType.LINE: 12,
+        sensorType.LOCATION: True,
+    }
+    input_len = 0
+
+    if sensorType.POINT in sensors:
+        input_len += len(sensors[sensorType.POINT])
+    if sensorType.PROXIMITY in sensors:
+        input_len += 2 * sensors[sensorType.PROXIMITY]
+    if sensorType.LINE in sensors:
+        input_len += sensors[sensorType.LINE]
+    if sensorType.LOCATION in sensors:
+        input_len += 2
+
+    net = dense_net(input_len, 10, relu, recursive=False)
+    net.add_layer(10, tanh)
+    # env = environ((8, net))
+    # print("Profiling fitness evaluation times")
+    #
+    GUI = gui()
+    hyperparams = (sensors, net)
+    GUI.display_imported_generation("saved_nets/generation290.p",
+                                    bullet_types={bulletType.SPIRAL: 1,
+                                                  bulletType.RANDOM: 1})
