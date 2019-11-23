@@ -21,8 +21,9 @@ The optimisation algorithm is simple, truncation evolution -- create agents, tak
 
 The agent below is trained using an AWS instance with 36 cores for ~290 generations.
 
-![Generation 290](danmaku_generation_290.gif)
-
+<p align="center">
+  <img width="300" height="300" src="danmaku_generation_290.gif">
+</p>
 
 # What I learned
 
