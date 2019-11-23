@@ -15,9 +15,11 @@ The agent controls a ship, which can move up, down, left and right anywhere with
 
 The fitness function is simple -- number of frames survived, weighted by time spent near the centre of the screen (to help the agent avoid getting trapped).
 
+The ship 'sees' via sensors detection pixels, position of closest bullets, light rays and absolute position.
+
 The game is implemented from scratch in python, and can be run without rendering to save CPU. Rendering can be done using pygame.
 
-The optimisation algorithm is simple, truncation evolution -- create agents, take best performing agents, add noise to create new population, repeat.
+The optimisation algorithm is simple, truncation evolution -- create agents, take best performing agents, add noise to create new population, repeat. This is really dumb, but there's also no reason for it to not work.
 
 The agent below is trained using an AWS instance with 36 cores for ~290 generations.
 
