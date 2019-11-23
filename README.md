@@ -19,9 +19,9 @@ The game is implemented from scratch in python, and can be run without rendering
 
 The optimisation algorithm is simple, truncation evolution -- create agents, take best performing agents, add noise to create new population, repeat.
 
-The agent below is trained using an AWS instance with 36 cores for ~250 generations.
+The agent below is trained using an AWS instance with 36 cores for ~290 generations.
 
-
+![Generation 290](danmaku_generation_290.gif)
 
 
 # What I learned
