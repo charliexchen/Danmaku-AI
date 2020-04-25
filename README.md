@@ -37,7 +37,7 @@ The agent below is trained using an AWS instance with 36 cores for ~290 generati
 
 * Proper use of remote AWS paired with MultiProcessing in order to accelerate computation
 
-* JAX for GPU accelerated tensor operations
+* JAX for GPU accelerated tensor operations in numpy
 
 
 
