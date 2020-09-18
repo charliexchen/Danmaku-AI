@@ -29,7 +29,7 @@ The agent below is trained using an AWS instance with 36 cores for ~290 generati
 
 # What I learned
 
-* Even stupid algorithms can work really well if enough CPU is applied. In fact, this was likely a more robust algorithm than, say, simple policy gradient or DQN.
+* Even stupid algorithms can work really well if enough CPU is applied. In fact, this was likely a more robust algorithm than, say, simple policy gradient or DQN, since you don't have issues with putting all your eggs in one basket with a single agent.
 
 * Implementation of Neural Nets from first principles instead of using a library.
 
@@ -37,7 +37,7 @@ The agent below is trained using an AWS instance with 36 cores for ~290 generati
 
 * Proper use of remote AWS paired with MultiProcessing in order to accelerate computation
 
-* JAX for GPU accelerated tensor operations in numpy
+* JAX for GPU accelerated tensor operations in numpy. Kera/Tensorflow is fine usually, but JAX is much more flexible.
 
 
 
