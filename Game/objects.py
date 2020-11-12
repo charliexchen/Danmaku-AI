@@ -276,6 +276,7 @@ class environ:
                             (self.fighter.pos[0] - self.spawn[0]) / 20,
                             (self.fighter.pos[1] - self.spawn[1]) / 20,
                         ]
+
                         self.bullets.append(bullet(v, self.spawn, 10))
 
                     elif bullet_type == "spiral":
@@ -289,7 +290,7 @@ class environ:
                             spd = 3.0
                             angle = self.dir
                             v = [spd * np.sin(angle), spd * np.cos(angle)]
-                            self.bullets.append(bullet(v, self.spawn, 6))
+                            self.bullets.append(bullet(v, self.spawn, 7))
 
                     elif bullet_type == "random":
                         # random spewing of bullets aimed at the ship
@@ -297,7 +298,7 @@ class environ:
                             spd = np.random.uniform(2.0, 5)
                             angle = np.random.uniform(1.5 * math.pi, 2.5 * math.pi)
                             v = [spd * np.sin(angle), spd * np.cos(angle)]
-                            self.bullets.append(bullet(v, self.spawn, 5))
+                            self.bullets.append(bullet(v, self.spawn, 6))
 
     def spawn_laser(self, pos, focused=True):
         unfoc_patter = [

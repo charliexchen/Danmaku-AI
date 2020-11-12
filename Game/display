@@ -140,7 +140,7 @@ class gui:
             label = myfont.render(str(env.damage), 1, colors.YELLOW)
             screen.blit(label, env.spawn)
             pygame.display.flip()
-            clock.tick(24)
+            clock.tick(30)
 
 
 if __name__ == "__main__":
