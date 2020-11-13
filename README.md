@@ -37,10 +37,16 @@ The agent below is trained using an AWS instance with 36 cores for ~290 generati
 
 * Proper use of remote AWS paired with MultiProcessing in order to accelerate computation
 
-* JAX for GPU accelerated tensor operations in numpy. Kera/Tensorflow is fine usually, but JAX is much more flexible.
+* JAX for GPU accelerated tensor operations in numpy. Kera/Tensorflow is fine usually, but JAX is much more flexible. I didn't end up using it on this project, but have started to use it in my GAN project
+
+# Epilogue
+
+As it turns out, I still have the gamemaker files buried deep inside my parent's desktop! I managed to dig it out and... the code was awful as expected. I had no knowledge of data structures or inbuilt functions at the time, and there was some really bad logic (to be fair, I was like 14 at the time). 
+
+After a little tweaking, I was even able to get the algorith my past self intended to implement.
 
 
-
+<insert gif here>
 
 
 
