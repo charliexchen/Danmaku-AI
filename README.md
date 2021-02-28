@@ -2,7 +2,7 @@
 
 Danmaku (弹幕) refers to these really hard arcade shoot 'em up games (like space invaders), where the entire screen gets covered in bullets, and the player has to weave between the bullets in order to survive.
 
-Years ago, in high school (2012), I made such a game in GameMaker (since it was simple to make). Because it was such a difficult game, I attempted to implement a bot to autoplay it. This turned out to be quite hard, and the AI I wrote back then could only survive a couple of seconds before it gets stuck in a corner and died.
+Years ago, in high school (2011), I made such a game in GameMaker (since it was simple to make). Because it was such a difficult game, I attempted to implement a bot to autoplay it. This turned out to be quite hard, and the AI I wrote back then could only survive a couple of seconds before it gets stuck in a corner and died.
 
 This is a second attempt at that problem using neural networks and evolution in 2018, before I started my first job.
 
@@ -43,7 +43,7 @@ The agent below is trained using an AWS instance with 36 cores for ~290 generati
 
 # Epilogue
 
-As it turns out, I still have the gamemaker files buried deep inside my parent's desktop! I managed to dig it out and... the code was awful as expected. I had no knowledge of data structures or inbuilt functions at the time, the whole thing was written with awful gamemaker script and there was some really bad logic (to be fair, I was like 14 at the time). 
+As it turns out, I still have the gamemaker files buried deep inside my parent's desktop! I managed to dig it out and... the code was awful as expected. I had no knowledge of data structures or inbuilt functions at the time, the whole thing was written with awful gamemaker script and there was some really ineffecient logic (to be fair, I was like 15 at the time). 
 
 After a little tweaking, I was even able to get the algorithm my past self intended to implement working!
 
@@ -53,7 +53,7 @@ After a little tweaking, I was even able to get the algorithm my past self inten
 </p>
 
 
-<p align="center"><i> <sub>Camera setup and simple walk. Note the trailing wire connected to power and USB.</sub></i></p>
+<p align="center"><i> <sub>The very old implementation I made back in high school!</sub></i></p>
 
 
 
