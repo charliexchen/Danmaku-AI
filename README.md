@@ -41,12 +41,15 @@ The agent below is trained using an AWS instance with 36 cores for ~290 generati
 
 # Epilogue
 
-As it turns out, I still have the gamemaker files buried deep inside my parent's desktop! I managed to dig it out and... the code was awful as expected. I had no knowledge of data structures or inbuilt functions at the time, and there was some really bad logic (to be fair, I was like 14 at the time). 
+As it turns out, I still have the gamemaker files buried deep inside my parent's desktop! I managed to dig it out and... the code was awful as expected. I had no knowledge of data structures or inbuilt functions at the time, the whole thing was written with awful gamemaker script and there was some really bad logic (to be fair, I was like 14 at the time). 
 
-After a little tweaking, I was even able to get the algorith my past self intended to implement.
+After a little tweaking, I was even able to get the algorithm my past self intended to implement working!
 
 
-<insert gif here>
+<p align="center">
+  <img width="300" height="300" src="danmaku_old.gif">
+</p>
+
 
 
 
