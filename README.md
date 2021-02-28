@@ -24,8 +24,10 @@ The optimisation algorithm is simple, truncation evolution -- create agents, tak
 The agent below is trained using an AWS instance with 36 cores for ~290 generations.
 
 <p align="center">
-  <img width="300" height="300" src="danmaku_generation_290.gif">
+  <img width="300" height="300" src="danmaku_290_with_enemy.gif">
 </p>
+<p align="center"><i> <sub>Agent dealing damage to a target. Note the ray sensors (purple), constallation of pixel sensors (green dots which goes red when it "fires") and proximity sensors (faint red circles close to the agent).</sub></i></p>
+
 
 # What I learned
 
@@ -51,6 +53,7 @@ After a little tweaking, I was even able to get the algorithm my past self inten
 </p>
 
 
+<p align="center"><i> <sub>Camera setup and simple walk. Note the trailing wire connected to power and USB.</sub></i></p>
 
 
 
