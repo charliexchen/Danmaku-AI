@@ -43,9 +43,9 @@ The agent below is trained using an AWS instance with 36 cores for ~290 generati
 
 # Epilogue
 
-As it turns out, I still have the gamemaker files buried deep inside my parent's desktop! I managed to dig it out and... the code was awful as expected. I had no knowledge of data structures or inbuilt functions at the time, the whole thing was written with awful gamemaker script and there was some really ineffecient logic (to be fair, I was like 15 at the time). 
+As it turns out, I still have the gamemaker files buried deep inside my parent's desktop! I managed to dig it out and... the code was garbage as expected. I had no knowledge of data structures, effeciency or inbuilt functions and the whole thing was hacked together with awful gamemaker script and some truly embarrassing logic. To be fair, I was only 15 at the time.
 
-After a little tweaking, I was even able to get the algorithm my past self intended to implement working!
+After a little tweaking, I was able to get the algorithm my past self intended to implement working!
 
 
 <p align="center">
@@ -53,7 +53,7 @@ After a little tweaking, I was even able to get the algorithm my past self inten
 </p>
 
 
-<p align="center"><i> <sub>The very old implementation I made back in high school!</sub></i></p>
+<p align="center"><i> <sub>The very old implementation I (tried) to make back in high school!</sub></i></p>
 
 
 
